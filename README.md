@@ -12,3 +12,4 @@ To remove containers:
 1. docker container prune
 2. docker images
 3. docker rmi <IMAGE_ID>
+test
