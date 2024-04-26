@@ -1,4 +1,3 @@
 services:
   robot:
     images: mobile-robots-project
-    build: .
