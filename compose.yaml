@@ -9,3 +9,8 @@ services:
       args:
         ROS_DISTRO: humble
       target: base
+    stdin_open: true
+    tty: true
+    network_mode: host
+    ipc: host
+    privileged: true
