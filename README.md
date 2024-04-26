@@ -7,3 +7,8 @@ For working with the pioneer robots for AUTO4508
 4. docker build -t mobile-robots-project .
 5. docker run -it mobile-robots-project
 6. docker compose up
+
+To remove containers:
+1. docker container prune
+2. docker images
+3. docker rmi <IMAGE_ID>

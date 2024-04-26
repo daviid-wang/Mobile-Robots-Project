@@ -1,5 +1,7 @@
 # Set base image (host OS)
-FROM osrf/ros:humble-desktop
+FROM osrf/ros:humble-desktop as base
+ENV ROS_DISTRO=humble
+SHELL ["/bin/bash", "-c"]
 
 # Copy the dependencies file to the working directory
 # COPY requirements.txt /project/requirements.txt

@@ -1,3 +1,11 @@
+version: "3"
+
 services:
-  robot:
+  base:
     images: mobile-robots-project
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ROS_DISTRO: humble
+      target: base
