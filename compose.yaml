@@ -2,7 +2,7 @@ version: "3"
 
 services:
   base:
-    images: mobile-robots-project
+    image: mobile-robots-project
     build:
       context: .
       dockerfile: Dockerfile
