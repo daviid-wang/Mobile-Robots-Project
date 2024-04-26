@@ -6,6 +6,8 @@ SHELL ["/bin/bash", "-c"]
 # Set the working directory in the container
 WORKDIR /project
 
+#copy ARIA and ARIA code
+
 # Copy the content of the local src directory to the working directory
 COPY . /project
 
