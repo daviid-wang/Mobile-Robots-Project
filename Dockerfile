@@ -9,15 +9,15 @@ SHELL ["/bin/bash", "-c"]
 # Set the working directory in the container
 WORKDIR /project
 
-RUN source /opt/ros/humble/setup.bash \
-    && apt-get update -y \
-    && rosdep install --from-paths src --ignore-src --rosdistro humble -y \
-    && colcon build --symlink-install
+# Copy the content of the local src directory to the working directory
+COPY . /project
+
+RUN . /opt/ros/humble/setup.bash && \
+    apt-get update -y && \
+    rosdep install --from-paths src --ignore-src --rosdistro humble -y && \
+    colcon build --symlink-install
 
 # Install any dependencies
 # RUN pip install -r requirements.txt
-
-# Copy the content of the local src directory to the working directory
-COPY . /project
 
 # CMD ["python3" , "src/test.py"]
