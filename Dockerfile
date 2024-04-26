@@ -1,5 +1,5 @@
 # Set base image (host OS)
-FROM ubuntu:22.04
+FROM osrf/ros:humble-desktop
 
 # Copy the dependencies file to the working directory
 # COPY requirements.txt /project/requirements.txt
