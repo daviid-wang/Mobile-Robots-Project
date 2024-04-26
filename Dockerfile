@@ -9,6 +9,11 @@ SHELL ["/bin/bash", "-c"]
 # Set the working directory in the container
 WORKDIR /project
 
+RUN source /opt/ros/humble/setup.bash \
+    && apt-get update -y \
+    && rosdep install --from-paths src --ignore-src --rosdistro humble -y \
+    && colcon build --symlink-install
+
 # Install any dependencies
 # RUN pip install -r requirements.txt
 
