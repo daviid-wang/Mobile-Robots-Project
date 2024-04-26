@@ -6,7 +6,7 @@ For working with the pioneer robots for AUTO4508
 3. git clone https://github.com/daviid-wang/Mobile-Robots-Project.git
 4. docker build -t mobile-robots-project .
 5. docker run -it mobile-robots-project
-6. docker compose up
+6. docker compose up (or) docker compose build 
 
 To remove containers:
 1. docker container prune

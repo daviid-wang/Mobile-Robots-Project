@@ -15,4 +15,4 @@ WORKDIR /project
 # Copy the content of the local src directory to the working directory
 COPY . /project
 
-CMD ["python3" , "src/test.py"]
+# CMD ["python3" , "src/test.py"]
