@@ -15,7 +15,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 
-# include "Aria/Aria.h"
+#include "Aria/Aria.h"
 
 //used with signal handler as signal handler function doesn't accept parameters
 bool stopRunning = false;
