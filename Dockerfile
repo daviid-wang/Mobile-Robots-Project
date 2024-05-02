@@ -10,7 +10,7 @@ COPY . /project
 
 # Install dependencies
 RUN apt-get update -y && \
-    apt-get install -y doxygen && \
+    apt-get install -y doxygen build-essential && \
     apt-get clean
 
 # Clone and build AriaCoda
@@ -22,6 +22,8 @@ RUN . /opt/ros/humble/setup.bash && \
     rosdep install --from-paths src --ignore-src --rosdistro humble -y && \
     colcon build --symlink-install
 
-# Set the command to run the application
-CMD ["gcc" , "src/ariaNode.cpp", "-o", "output.exe"]
-RUN ["output.exe"]
+# Compile ariaNode.cpp
+RUN g++ src/ariaNode.cpp -o output.exe
+
+# Run output.exe (make sure it's in a directory that's in PATH or use full path)
+CMD ["./output.exe"]
