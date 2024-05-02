@@ -11,6 +11,8 @@ WORKDIR /project
 # Copy the content of the local src directory to the working directory
 COPY . /project
 
+RUN git clone https://github.com/cinvesrob/Aria.git
+
 # Build the base Colcon workspace, installing dependencies first.
 RUN . /opt/ros/humble/setup.bash && \
     apt-get update -y && \
