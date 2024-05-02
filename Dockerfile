@@ -12,6 +12,7 @@ WORKDIR /project
 COPY . /project
 
 RUN git clone https://github.com/cinvesrob/Aria.git
+RUN git clone https://github.com/reedhedges/AriaCoda.git
 
 # Build the base Colcon workspace, installing dependencies first.
 RUN . /opt/ros/humble/setup.bash && \
