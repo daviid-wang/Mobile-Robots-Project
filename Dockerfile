@@ -13,6 +13,7 @@ COPY . /project
 
 RUN git clone https://github.com/cinvesrob/Aria.git
 RUN git clone https://github.com/reedhedges/AriaCoda.git
+RUN sudo apt install make g++
 
 # Build the base Colcon workspace, installing dependencies first.
 RUN . /opt/ros/humble/setup.bash && \
