@@ -17,13 +17,14 @@ RUN apt-get update -y && \
 RUN git clone https://github.com/reedhedges/AriaCoda.git
 RUN cd AriaCoda && make && make install
 
-# Build the base Colcon workspace, installing dependencies first.
+# Source ROS environment and install dependencies for the project
 RUN . /opt/ros/humble/setup.bash && \
-    rosdep install --from-paths src --ignore-src --rosdistro humble -y && \
+    rosdep update && \
+    rosdep install --from-paths src --ignore-src --rosdistro=$ROS_DISTRO -y
+
+# Build the ROS 2 workspace
+RUN . /opt/ros/humble/setup.bash && \
     colcon build --symlink-install
 
-# Compile ariaNode.cpp
-RUN g++ src/ariaNode.cpp -o output.exe
-
-# Run output.exe (make sure it's in a directory that's in PATH or use full path)
-CMD ["./output.exe"]
+# Command to run the executable from the package
+CMD ["ros2", "run", "your_package_name", "your_executable_name"]
