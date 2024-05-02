@@ -20,3 +20,6 @@ RUN . /opt/ros/humble/setup.bash && \
     colcon build --symlink-install
 
 # CMD ["python3" , "src/test.py"]
+
+CMD ["gcc" , "src/ariaNode.cpp", "-o", "output.exe"]
+RUN ["output.exe"]
