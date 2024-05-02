@@ -11,9 +11,8 @@ WORKDIR /project
 # Copy the content of the local src directory to the working directory
 COPY . /project
 
-RUN git clone https://github.com/cinvesrob/Aria.git
 RUN git clone https://github.com/reedhedges/AriaCoda.git
-RUN sudo apt install make g++
+RUN cd AriaCoda && make && make install
 
 # Build the base Colcon workspace, installing dependencies first.
 RUN . /opt/ros/humble/setup.bash && \
