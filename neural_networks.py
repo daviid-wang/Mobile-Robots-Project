@@ -23,9 +23,16 @@ from keras import layers
 
 model = tf.keras.models.load_model('handwritten.keras') 
 
-# img_num = 1
-# while os.path.isfile(f"digits/digit{img_num}.png"):
-#     try:
-#         image = cv2.imread(f"digits/digit{img_num}.png")[:,:,:,0]
-#         image - np.invert(np.array([image]))
-        
+img_num = 1
+while os.path.isfile(f"test_digits\3.png"):
+    try:
+        image = cv2.imread(f"test_digits\3.png")[:,:,0]
+        image - np.invert(np.array([image]))
+        prediction = model.predict(image)
+        print("digit is probably a {np.argmax(prediction)}")
+        plt.imshow(image[0], cmap=plt.cm.binary)
+        plt.show()
+    except:
+        print("Error!")
+    finally:
+        img_num +=1
