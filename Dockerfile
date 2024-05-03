@@ -27,7 +27,3 @@ RUN . /opt/ros/humble/setup.bash && \
 # Build the ROS 2 workspace
 RUN . /opt/ros/humble/setup.bash && \
     colcon build --symlink-install
-
-# Command to run the executable from the package
-RUN cmake .. && make
-
