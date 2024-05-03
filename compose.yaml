@@ -16,6 +16,7 @@ services:
         target: /dev
     device_cgroup_rules:
       - 'c 188:* rmw'
+      - 'c 189:* rmw'
     # tty: true
     network_mode: host
     ipc: host
