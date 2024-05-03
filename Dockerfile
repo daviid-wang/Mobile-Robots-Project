@@ -6,6 +6,8 @@ RUN mkdir project
 
 # Set the working directory in the container
 WORKDIR /project
+RUN cd /project
+ENTRYPOINT ["sh", "-c", "pwd"]
 
 # Copy the content of the local src directory to the working directory
 COPY . /project
@@ -30,5 +32,5 @@ RUN . /opt/ros/humble/setup.bash && \
 
 # Command to run the executable from the package
 CMD ["pwd"]
-RUN cd project && cmake .. && make
+RUN cmake .. && make
 
