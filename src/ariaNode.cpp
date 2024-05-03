@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
 
     robot->setAbsoluteMaxTransVel(400);
 
-    float forwardSpeed = 0.0;
+    float forwardSpeed = 1;
     float rotationSpeed = 0.0;
     
     
