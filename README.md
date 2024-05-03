@@ -12,4 +12,6 @@ To remove containers:
 1. docker container prune
 2. docker images
 3. docker rmi <IMAGE_ID>
-test
+
+1. docker run -it mobile-robots-project
+2. ros2 run ariaNode ariaNode -rp /dev/ttyUSB0

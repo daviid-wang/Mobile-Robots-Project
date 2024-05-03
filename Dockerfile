@@ -2,6 +2,10 @@ FROM osrf/ros:humble-desktop as base
 ENV ROS_DISTRO=humble
 SHELL ["/bin/bash", "-c"]
 
+ARG USERNAME=group7
+ARG USER_UID=152
+ARG USER_GID=$USER_UID
+
 RUN mkdir project
 
 # Set the working directory in the container
