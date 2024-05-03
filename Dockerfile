@@ -27,6 +27,6 @@ RUN . /opt/ros/humble/setup.bash && \
     colcon build --symlink-install
 
 # Command to run the executable from the package
-CMD ["ls"]
+CMD ["pwd"]
 RUN cmake .. && make
 
