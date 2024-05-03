@@ -2,6 +2,8 @@ FROM osrf/ros:humble-desktop as base
 ENV ROS_DISTRO=humble
 SHELL ["/bin/bash", "-c"]
 
+RUN mkdir project
+
 # Set the working directory in the container
 WORKDIR /project
 
