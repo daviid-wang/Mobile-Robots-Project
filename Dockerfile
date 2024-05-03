@@ -30,5 +30,5 @@ RUN . /opt/ros/humble/setup.bash && \
 
 # Command to run the executable from the package
 CMD ["pwd"]
-RUN cmake .. && make
+RUN cd project && cmake .. && make
 
