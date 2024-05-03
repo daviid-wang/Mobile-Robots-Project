@@ -10,6 +10,10 @@ services:
         ROS_DISTRO: humble
       target: base
     stdin_open: true
+    volumes:
+      - type: bind
+        source: /dev
+        target: /dev
     # tty: true
     network_mode: host
     ipc: host
