@@ -10,7 +10,12 @@ services:
         ROS_DISTRO: humble
       target: base
     stdin_open: true
-    tty: true
+    volumes:
+      - type: bind
+        source: /dev
+        target: /dev
+    # tty: true
     network_mode: host
     ipc: host
     privileged: true
+    command: ros2 run ariaNode ariaNode
