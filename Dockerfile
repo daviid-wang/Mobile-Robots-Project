@@ -14,8 +14,9 @@ RUN apt-get update -y && \
     apt-get clean
 
 # Clone and build AriaCoda
-RUN cd src && git clone https://github.com/reedhedges/AriaCoda.git
-RUN cd src/AriaCoda && make && make install
+RUN git clone https://github.com/reedhedges/AriaCoda.git
+RUN cd AriaCoda && make && make install
+RUN cd /project
 
 # Source ROS environment and install dependencies for the project
 RUN . /opt/ros/humble/setup.bash && \
@@ -26,6 +27,6 @@ RUN . /opt/ros/humble/setup.bash && \
 RUN . /opt/ros/humble/setup.bash && \
     colcon build --symlink-install
 
-# Command to compile and run the executable from the package
-RUN cd project && cmake .. && make
+# Command to run the executable from the package
+RUN cmake .. && make
 
