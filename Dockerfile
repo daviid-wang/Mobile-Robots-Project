@@ -27,3 +27,7 @@ RUN . /opt/ros/humble/setup.bash && \
 # Build the ROS 2 workspace
 RUN . /opt/ros/humble/setup.bash && \
     colcon build --symlink-install
+
+
+RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+RUN echo "source install/setup.bash" >> ~/.bashrc
