@@ -43,8 +43,8 @@ img_num = 1
 while os.path.isfile(f"digit{img_num}.png"):
     try:
         image = cv2.imread(f"digit{img_num}.png", cv2.IMREAD_GRAYSCALE)
-        image = np.invert(image)  # Inverting the image (assuming your model was trained on white-on-black digits)
-        image = cv2.resize(image, (28, 28)).reshape(1, 28, 28, 1) / 255.0  # Resize, reshape, and normalize
+        image = np.invert(image)  
+        image = cv2.resize(image, (28, 28)).reshape(1, 28, 28, 1) / 255.0 
         
         prediction = model.predict(image)
         predicted_digit = np.argmax(prediction)
