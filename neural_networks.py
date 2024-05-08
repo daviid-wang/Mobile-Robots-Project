@@ -21,18 +21,38 @@ from keras import layers
 # model.fit(x_train, y_train, epochs = 3)
 # model.save('handwritten.keras') 
 
-model = tf.keras.models.load_model('handwritten.keras') 
+# model = tf.keras.models.load_model('handwritten.keras') 
+
+# img_num = 1
+# while os.path.isfile(f"test_digits/digit{img_num}.png"):
+#     try:
+#         image = cv2.imread(f"test_digits/digit{img_num}.png")[:,:,0]
+#         image - np.invert(np.array([image]))
+#         prediction = model.predict(image)
+#         print("digit is probably a {np.argmax(prediction)}")
+#         plt.imshow(image[0], cmap=plt.cm.binary)
+#         plt.show()
+#     except:
+#         print("Error!")
+#     finally:
+#         img_num +=1
+
+model = tf.keras.models.load_model('handwritten.keras')
 
 img_num = 1
-while os.path.isfile(f"test_digits\3.png"):
+while os.path.isfile(f"digit{img_num}.png"):
     try:
-        image = cv2.imread(f"test_digits\3.png")[:,:,0]
-        image - np.invert(np.array([image]))
+        image = cv2.imread(f"digit{img_num}.png", cv2.IMREAD_GRAYSCALE)
+        image = np.invert(image)  # Inverting the image (assuming your model was trained on white-on-black digits)
+        image = cv2.resize(image, (28, 28)).reshape(1, 28, 28, 1) / 255.0  # Resize, reshape, and normalize
+        
         prediction = model.predict(image)
-        print("digit is probably a {np.argmax(prediction)}")
-        plt.imshow(image[0], cmap=plt.cm.binary)
+        predicted_digit = np.argmax(prediction)
+        
+        print(f"Digit is probably a {predicted_digit}")
+        plt.imshow(image[0,:,:,0], cmap=plt.cm.binary)
         plt.show()
-    except:
-        print("Error!")
+    except Exception as e:
+        print(f"Error processing image: {e}")
     finally:
-        img_num +=1
+        img_num += 1
