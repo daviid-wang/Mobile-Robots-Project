@@ -4,12 +4,12 @@ services:
   base:
     image: mobile-robots-project
     build:
-      context: .
+      # context: .
       dockerfile: Dockerfile
       args:
         ROS_DISTRO: humble
       target: base
-    stdin_open: true
+    # stdin_open: true
     volumes:
       - type: bind
         source: /dev
@@ -19,6 +19,6 @@ services:
       - 'c 189:* rmw'
     # tty: true
     network_mode: host
-    ipc: host
-    privileged: true
+    # ipc: host
+    # privileged: true
     command: ros2 run ariaNode ariaNode
