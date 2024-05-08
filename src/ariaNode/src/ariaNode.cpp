@@ -15,7 +15,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 
-#include "Aria/Aria.h"
+# include "Aria/Aria.h"
 
 //used with signal handler as signal handler function doesn't accept parameters
 bool stopRunning = false;
@@ -60,8 +60,8 @@ class ariaNode : public rclcpp::Node {
 
 // Deals with ctl+c handling to stop the motors correctly.
 void my_handler(int s){
-            printf("Caught signal %d\n",s);
-            stopRunning = true;
+           printf("Caught signal %d\n",s);
+           stopRunning = true;
 }
 
 int main(int argc, char** argv) {

@@ -1,20 +1,37 @@
-# Set base image (host OS)
 FROM osrf/ros:humble-desktop as base
 ENV ROS_DISTRO=humble
 SHELL ["/bin/bash", "-c"]
 
+ARG USERNAME=group7
+ARG USER_UID=152
+ARG USER_GID=$USER_UID
+
+RUN mkdir project
+
 # Set the working directory in the container
 WORKDIR /project
-
-#copy ARIA and ARIA code
 
 # Copy the content of the local src directory to the working directory
 COPY . /project
 
-# Build the base Colcon workspace, installing dependencies first.
+# Install dependencies
+RUN apt-get update -y && \
+    apt-get install -y doxygen build-essential && \
+    apt-get clean
+
+# Clone and build AriaCoda
+RUN cd src && git clone https://github.com/reedhedges/AriaCoda.git
+RUN cd src/AriaCoda && make && make install
+
+# Source ROS environment and install dependencies for the project
 RUN . /opt/ros/humble/setup.bash && \
-    apt-get update -y && \
-    rosdep install --from-paths src --ignore-src --rosdistro humble -y && \
+    rosdep update && \
+    rosdep install --from-paths src --ignore-src --rosdistro=$ROS_DISTRO -y
+
+# Build the ROS 2 workspace
+RUN . /opt/ros/humble/setup.bash && \
     colcon build --symlink-install
 
-# CMD ["python3" , "src/test.py"]
+
+RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+RUN echo "source install/setup.bash" >> ~/.bashrc
