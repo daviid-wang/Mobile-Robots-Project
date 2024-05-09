@@ -109,6 +109,11 @@ def generate_launch_description():
         output='screen',
     )
 
+    ariaNode = Node( 
+        package='ariaNode', 
+        executable='ariaNode', 
+    )
+
     pioneer_base_fp_link_tf = Node(package='tf2_ros', 
         executable='static_transform_publisher', 
         name='base_fp_linkTF', 
@@ -154,5 +159,6 @@ def generate_launch_description():
         bridge,
         slam_toolbox,
         pioneer_base_fp_link_tf,
-        joystick
+        joystick,
+        ariaNode
     ])
