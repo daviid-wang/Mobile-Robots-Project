@@ -28,7 +28,8 @@ RUN apt install wget && wget https://bootstrap.pypa.io/get-pip.py &&python3 ./ge
 RUN pip3 install depthai-sdk && pip3 install opencv-python
 
 #install joy and teleop
-RUN apt install ros-humble-joy-linux ros-humble-teleop-twist-joy -y
+RUN apt install ros-humble-joy-linux -y
+RUN apt install ros-humble-teleop-twist-joy -y
 # RUN cd joy
 
 # Copy the content of the local src directory to the working directory
