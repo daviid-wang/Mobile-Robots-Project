@@ -2,12 +2,14 @@ version: "3"
 
 services:
   base:
-    image: mobile-robots-project:latest
+    image: mobile-robots-project
     build:
+      # context: .
       dockerfile: Dockerfile
       args:
         ROS_DISTRO: humble
-    #   target: base
+      target: base
+    # stdin_open: true
     volumes:
       - type: bind
         source: /dev
@@ -15,16 +17,8 @@ services:
     device_cgroup_rules:
       - 'c 188:* rmw'
       - 'c 189:* rmw'
+    # tty: true
     network_mode: host
-    # command: ros2 pkg prefix ariaPackage --share
-    # command: ros2 node list
-    command: ros2 run ariaPackage ariaPackage -rp /dev/ttyUSB0
-  # camera:
-  #   image: mobile-robots-project
-  #   build:
-  #     dockerfile: Dockerfile
-  #     args: 
-  #       ROS_DISTRO: humble
-  #     target: base
-  #   command: python3 cam_connect.py -rp /dev/ttyUSB1 #change this later
-
+    # ipc: host
+    # privileged: true
+    command: ros2 run ariaNode ariaNode && ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.5, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}"
