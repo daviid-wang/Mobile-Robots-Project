@@ -31,8 +31,8 @@ services:
     build: .
     volumes:
       - type: bind
-        source: /dev
-        target: /dev
+        source: /dev/shm
+        target: /dev/shm
     device_cgroup_rules:
       - 'c *:* rmw'
     # command: ros2 run joy joyNode && ros2 launch teleop_twist_joy teleop-launch.py
