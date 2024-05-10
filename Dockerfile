@@ -22,31 +22,33 @@ RUN git clone https://github.com/reedhedges/AriaCoda.git
 RUN cd AriaCoda && make && make install
 
 #install wget & pip
-RUN apt install wget && wget https://bootstrap.pypa.io/get-pip.py &&python3 ./get-pip.py 
+RUN apt install wget && wget https://bootstrap.pypa.io/get-pip.py && python3 ./get-pip.py 
 
 #install depthai and opencv
-RUN pip3 install depthai-sdk && pip3 install opencv-python
+RUN pip3 install depthai-sdk && pip3 install opencv-python 
+# && pip3 install --upgrade setuptools && pip3 install ez_setup && pip3 install os-sys
 
 #install joy and teleop
-RUN apt install ros-humble-joy-linux -y
-RUN apt install ros-humble-teleop-twist-joy -y
+RUN apt install ros-humble-joy-linux ros-humble-teleop-twist-joy ros-humble-phidgets-api ros-humble-camera-info-manager -y
 # RUN cd joy
 
 # Copy the content of the local src directory to the working directory
 COPY . /project
 
 # Source ROS environment and install dependencies for the project
-RUN . /opt/ros/humble/setup.bash && \
-    rosdep update && \
-    rosdep install --from-paths src --ignore-src --rosdistro=$ROS_DISTRO -y
+# RUN . /opt/ros/humble/setup.bash && \
+#     rosdep update && \
+#     rosdep install --from-paths src --ignore-src --rosdistro=$ROS_DISTRO -y
+
+RUN rosdep install --from-paths src --ignore-src --rosdistro=$ROS_DISTRO -y
 
 # Build the ROS 2 workspace
 RUN . /opt/ros/humble/setup.bash && \
-    colcon build --symlink-install
+    colcon build
 
 RUN source /opt/ros/humble/setup.bash
 RUN source /project/install/setup.bash
-RUN . install/setup.bash
+# RUN . install/setup.bash
 
 RUN chmod +x /project/entrypoint.sh
 
