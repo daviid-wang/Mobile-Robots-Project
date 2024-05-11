@@ -127,6 +127,19 @@ def generate_launch_description():
     #     package="rqt_robot_steering",
     #     executable="rqt_robot_steering",
     # )
+    # aria_node = ExecuteProcess(
+    #     cmd=[[
+    #         'ros2 run ariaNode ariaNode -rp /dev/ttyUSB0'
+    #     ]],
+    #     shell=True
+    # )
+    
+    # test = ExecuteProcess(
+    #     cmd=[[
+    #         'ros2 topic echo /joy'
+    #     ]],
+    #     shell=True
+    # )
 
     joystick = IncludeLaunchDescription(
                 # PythonLaunchDescriptionSource([os.path.join(
@@ -162,5 +175,7 @@ def generate_launch_description():
         # bridge,
         # slam_toolbox,
         # pioneer_base_fp_link_tf,
+        # aria_node,
+        # test,
         joystick
     ])
