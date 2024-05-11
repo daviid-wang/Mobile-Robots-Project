@@ -29,11 +29,13 @@ RUN pip3 install depthai-sdk && pip3 install opencv-python
 # && pip3 install --upgrade setuptools && pip3 install ez_setup && pip3 install os-sys
 
 #install joy and teleop
-RUN apt install ros-humble-joy-linux ros-humble-teleop-twist-joy ros-humble-phidgets-api ros-humble-camera-info-manager -y
+RUN apt install ros-humble-joy-linux ros-humble-teleop-twist-joy ros-humble-phidgets-api ros-humble-camera-info-manager ros-humble-sick-scan-xd ros-humble-rviz2 -y
 # RUN cd joy
 
 # Copy the content of the local src directory to the working directory
 COPY . /project
+
+RUN echo "xhost +" >> ~/.bashrc
 
 # Source ROS environment and install dependencies for the project
 # RUN . /opt/ros/humble/setup.bash && \
@@ -53,6 +55,4 @@ RUN source /project/install/setup.bash
 RUN chmod +x /project/entrypoint.sh
 
 ENTRYPOINT [ "/project/entrypoint.sh" ]
-
-# RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
 # RUN echo "source /project/install/setup.bash" >> ~/.bashrc
