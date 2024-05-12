@@ -9,14 +9,33 @@ class ExplorerController(Node):
         self.publisher = self.create_publisher(Bool, '/automatic', 10)
         self.subscription = self.create_subscription(Joy, '/joy', self.joy_callback, 10) #subscribing yo yt joy, ud dont know what the joy is publishing 
         self.is_automatic = False  # Variable to track the automatic mode
-        self.prev_button_state = False
+        self.prev_x_state = False
+        self.prev_o_state = False
 
     def joy_callback(self, msg):
-        curr_button_state = msg.buttons[2] == 1
-        if curr_button_state and not self.prev_button_state:
-            self.is_automatic = not self.is_automatic
+        curr_button_x = msg.buttons[2] == 1 # X  
+        curr_button_o = msg.buttons[1] == 1 # O
+        
+        if curr_button_x and not self.prev_button_state:
+            self.is_automatic = True #auto mode
             self.publish_mode(self.is_automatic)
-        self.pre_button_state = curr_button_state
+        #self.pre_button_state = curr_button_state
+        
+        if curr_button_o and not self.prev_o_state:
+            self.is_automatic = False
+            self.publish_mode(self.is_automatic)
+        
+        self.prev_x_state = curr_button_x
+        self.prev_o_state = curr_button_o
+        
+        #dead man swtich in auto mode
+        if self.is_automatic:
+            r_2 = msg.axes[5] #rigt
+            l_2 = msg.axes[4] #left 
+            if r_2 < 0.5 and l_2 < 0.5:
+                self.is_automatic = False
+                self.publish_mode(self.is_automatic)
+        
         # # Assuming that msg.axes[0] corresponds to your dead man switch joystick value
         # if msg.axes[2] > 0.5:  # Assuming > 0.5 means dead man switch is activated
         #     if not self.is_automatic:  # Start explorer.py if not already started
