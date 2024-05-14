@@ -36,6 +36,8 @@ RUN apt-get install --reinstall libqt5core5a libqt5gui5 libqt5widgets5
 # Copy the content of the local src directory to the working directory
 COPY . /project
 
+RUN echo "xhost +" >> ~/.bashrc
+
 # Source ROS environment and install dependencies for the project
 # RUN . /opt/ros/humble/setup.bash && \
 #     rosdep update && \

@@ -75,6 +75,8 @@ class ExploreAndMap(Node):
         # Explore the occupancy grid by finding unexplored cells
         unexplored_indices = np.where(np.array(self.map_data.data) == -1)[0]
 
+        #TODO: Search the array within 15m by 15m for unsearched grid points
+
         if len(unexplored_indices) > 0:
             # Convert index to (row, col) coordinates
             unexplored_cells = [
