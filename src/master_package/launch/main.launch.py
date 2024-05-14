@@ -142,9 +142,6 @@ def generate_launch_description():
     # )
 
     joystick = IncludeLaunchDescription(
-                # PythonLaunchDescriptionSource([os.path.join(
-                #     get_package_share_directory(master_package),'launch','joystick.launch.py'
-                # )]), launch_arguments={'use_sim_time': 'true'}.items()
                 PythonLaunchDescriptionSource([
                 PathJoinSubstitution([
                     FindPackageShare('master_package'),
@@ -153,6 +150,18 @@ def generate_launch_description():
                 ])
             ]),
     )
+    
+    lidar = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([
+                PathJoinSubstitution([
+                    FindPackageShare('master_package'),
+                    'launch',
+                    'lidar.launch.py'
+                ])
+            ]),
+    )
+    
+    
 
     Node(
             package='v4l2_camera',
@@ -165,17 +174,18 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        rviz_launch_arg,
+        # rviz_launch_arg,
         # gazebo,
         # robot,
         # robot_state_publisher,
         # joint_state_pub,
-        rviz,
+        # rviz,
         # robot_steering,
         # bridge,
         # slam_toolbox,
         # pioneer_base_fp_link_tf,
         # aria_node,
         # test,
+        lidar,
         joystick
     ])

@@ -5,6 +5,7 @@ SHELL ["/bin/bash", "-c"]
 ARG USERNAME=group7
 ARG USER_UID=152
 ARG USER_GID=$USER_UID
+RUN echo "xhost +" >> ~/.bashrc
 
 RUN mkdir project
 
@@ -29,9 +30,9 @@ RUN pip3 install depthai-sdk && pip3 install opencv-python
 # && pip3 install --upgrade setuptools && pip3 install ez_setup && pip3 install os-sys
 
 #install joy and teleop
-RUN apt install ros-humble-joy-linux ros-humble-teleop-twist-joy ros-humble-phidgets-api ros-humble-camera-info-manager -y
+RUN apt install ros-humble-joy-linux ros-humble-teleop-twist-joy ros-humble-phidgets-api ros-humble-camera-info-manager ros-humble-sick-scan-xd ros-humble-rviz2 libxcb-xinerama0 ros-humble-slam-toolbox ros-humble-robot-localization -y
 # RUN cd joy
-
+RUN apt-get install --reinstall libqt5core5a libqt5gui5 libqt5widgets5
 # Copy the content of the local src directory to the working directory
 COPY . /project
 
@@ -53,6 +54,4 @@ RUN source /project/install/setup.bash
 RUN chmod +x /project/entrypoint.sh
 
 ENTRYPOINT [ "/project/entrypoint.sh" ]
-
-# RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
 # RUN echo "source /project/install/setup.bash" >> ~/.bashrc

@@ -2,7 +2,7 @@ version: "3"
 
 services:
   base:
-    image: mobile-robots-project
+    image: mobile-robots-project:latest
     build:
       # context: .
       dockerfile: Dockerfile
@@ -15,8 +15,7 @@ services:
         source: /dev
         target: /dev
     device_cgroup_rules:
-      - 'c 188:* rmw'
-      - 'c 189:* rmw'
+      - 'c *:* rmw'
     tty: true
     network_mode: host
     ipc: host
@@ -36,6 +35,8 @@ services:
       - type: bind
         source: /dev
         target: /dev
+    depends_on:
+    - base
     device_cgroup_rules:
       - 'c *:* rmw'
     environment:
@@ -43,3 +44,46 @@ services:
       - ROS_MASTER_URI=http://localhost:11311
     # command: ros2 run joy joyNode && ros2 launch teleop_twist_joy teleop-launch.py
     command: ros2 launch master_package main.launch.py
+  camera:
+    image: mobile-robots-project:latest
+    build: .
+    depends_on:
+    - base
+    volumes:
+      - type: bind
+        source: /dev/bus/usb
+        target: /dev/bus/usb
+    device_cgroup_rules:
+      - 'c *:* rmw'
+    environment:
+      - ROS_DOMAIN_ID=153
+      - ROS_MASTER_URI=http://localhost:11311
+    command: ros2 launch depthai_ros_driver camera.launch.py
+  rviz:
+      image: mobile-robots-project:latest
+      network_mode: host
+      command: ros2 launch master_package rviz.launch.py
+      privileged: True
+      environment:
+        - DISPLAY
+      volumes:
+        - /tmp/.X11-unix:/tmp/.X11-unix:rw
+        - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
+        - type: bind
+          source: /dev/shm
+          target: /dev/shm
+  # lidar:
+  #   image: mobile-robots-project:latest
+  #   build: .
+  #   depends_on:
+  #   - base
+  #   volumes:
+  #     - type: bind
+  #       source: /dev
+  #       target: /dev
+  #   device_cgroup_rules:
+  #     - 'c *:* rmw'
+  #   environment:
+  #     - ROS_DOMAIN_ID=153
+  #     - ROS_MASTER_URI=http://localhost:11311
+  #   command: ros2 launch depthai_ros_driver camera.launch.py
