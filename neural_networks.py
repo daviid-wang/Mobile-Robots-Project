@@ -40,7 +40,6 @@ from keras import layers
 
 
 model = tf.keras.models.load_model('handwritten.keras')
-
 img_num = 1
 while os.path.isfile(f"digit{img_num}.png"):
     try:
@@ -48,7 +47,7 @@ while os.path.isfile(f"digit{img_num}.png"):
         _, image = cv2.threshold(image, 120, 255, cv2.THRESH_BINARY_INV)
        
         if np.mean(image) > 127:
-            image = np.invert(image)  # Inverting the image 
+            image = np.invert(image)  
         image = cv2.resize(image, (28, 28)).reshape(1, 28, 28, 1) / 255.0  
         
         prediction = model.predict(image)

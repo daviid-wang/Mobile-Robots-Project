@@ -41,7 +41,6 @@ def generate_launch_description():
             {'use_sim_time': False},
         ]
     )
-
     return LaunchDescription([
         rviz_launch_arg,
         rviz
