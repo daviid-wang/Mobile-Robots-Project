@@ -20,7 +20,6 @@ def generate_launch_description():
     rviz = ExecuteProcess(
         cmd=["rviz2"]
     )
-
     return LaunchDescription([
             # rviz_launch_arg,
             rviz,
