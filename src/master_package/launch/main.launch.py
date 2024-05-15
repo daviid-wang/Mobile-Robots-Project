@@ -1,17 +1,3 @@
-# Copyright 2022 Open Source Robotics Foundation, Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import os
 
 from ament_index_python.packages import get_package_share_directory
@@ -20,8 +6,9 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, Exec
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, TextSubstitution
-from launch_ros.actions import Node
+from launch_ros.actions import Node, ComposableNodeContainer
 from launch_ros.substitutions import FindPackageShare
+from launch_ros.descriptions import ComposableNode
 
 
 def generate_launch_description():
@@ -38,10 +25,10 @@ def generate_launch_description():
     # with open(robot_file, 'r') as infp:
     #     robot_desc = infp.read()
 
-    rviz_launch_arg = DeclareLaunchArgument(
-        'rviz', default_value='true',
-        description='Open RViz.'
-    )
+    # rviz_launch_arg = DeclareLaunchArgument(
+    #     'rviz', default_value='true',
+    #     description='Open RViz.'
+    # )
 
     # gazebo = IncludeLaunchDescription(
     #     PythonLaunchDescriptionSource(
@@ -68,15 +55,15 @@ def generate_launch_description():
     # )
 
     # Launch rviz
-    rviz = Node(
-        package='rviz2',
-        executable='rviz2',
-        # arguments=['-d', os.path.join(pkg_ros_gz_sim_demos, 'rviz', 'vehicle.rviz')],
-        condition=IfCondition(LaunchConfiguration('rviz')),
-        parameters=[
-            {'use_sim_time': False},
-        ]
-    )
+    # rviz = Node(
+    #     package='rviz2',
+    #     executable='rviz2',
+    #     # arguments=['-d', os.path.join(pkg_ros_gz_sim_demos, 'rviz', 'vehicle.rviz')],
+    #     condition=IfCondition(LaunchConfiguration('rviz')),
+    #     parameters=[
+    #         {'use_sim_time': False},
+    #     ]
+    # )
 
     # robot = ExecuteProcess(
     #     cmd=["ros2", "run", "ros_gz_sim", "create", "-topic", "robot_description", "-z", "0.2"],
@@ -161,16 +148,37 @@ def generate_launch_description():
             ]),
     )
     
-    
+    # lidar = ExecuteProcess(
+    #     cmd=["ros2", "launch", "sick_scan_xd", "sick_tim_7xx.launch.py"]
+    # )
 
-    Node(
-            package='v4l2_camera',
-            executable='v4l2_camera_node',
+    # camera = Node(
+    #         package='v4l2_camera',
+    #         executable='v4l2_camera_node',
+    #         output='screen',
+    #         parameters=[{
+    #             'image_size': [640,480],
+    #             'camera_frame_id': 'camera_link_optical'
+    #             }]
+    # )
+    
+    
+    phidgets = ComposableNodeContainer(
+            name='phidgets_container',
+            namespace='',
+            package='rclcpp_container',
+            executable='component_container',
             output='screen',
-            parameters=[{
-                'image_size': [640,480],
-                'camera_frame_id': 'camera_link_optical'
-                }]
+            compostable_node_description=[
+                ComposableNode(
+                    package='phidgets_spatial',
+                    plugin='phidgets::SpatialRosI',
+                    name='phidgets_spatial',
+                    parameters=[
+                        os.path.join(get_package_share_directory("p3at_bringup"), "config", "imu.yaml")
+                    ]),
+            ],
+            output='both',
     )
 
     return LaunchDescription([
@@ -186,6 +194,8 @@ def generate_launch_description():
         # pioneer_base_fp_link_tf,
         # aria_node,
         # test,
+        # camera,
         lidar,
-        joystick
+        joystick,
+        phidgets,
     ])

@@ -1,0 +1,4 @@
+phidgets_spatial:
+  frame_id: imu_link
+  use_orientation: true
+  spatial_algorithm: imu
