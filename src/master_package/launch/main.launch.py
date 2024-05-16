@@ -6,10 +6,8 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, Exec
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, TextSubstitution
-from launch_ros.actions import Node, ComposableNodeContainer
+from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
-from launch_ros.descriptions import ComposableNode
-
 
 def generate_launch_description():
 
@@ -25,10 +23,10 @@ def generate_launch_description():
     # with open(robot_file, 'r') as infp:
     #     robot_desc = infp.read()
 
-    # rviz_launch_arg = DeclareLaunchArgument(
-    #     'rviz', default_value='true',
-    #     description='Open RViz.'
-    # )
+    rviz_launch_arg = DeclareLaunchArgument(
+        'rviz', default_value='true',
+        description='Open RViz.'
+    )
 
     # gazebo = IncludeLaunchDescription(
     #     PythonLaunchDescriptionSource(
@@ -55,15 +53,25 @@ def generate_launch_description():
     # )
 
     # Launch rviz
-    # rviz = Node(
-    #     package='rviz2',
-    #     executable='rviz2',
-    #     # arguments=['-d', os.path.join(pkg_ros_gz_sim_demos, 'rviz', 'vehicle.rviz')],
-    #     condition=IfCondition(LaunchConfiguration('rviz')),
-    #     parameters=[
-    #         {'use_sim_time': False},
-    #     ]
-    # )
+    rviz = Node(
+        package='rviz2',
+        executable='rviz2',
+        # arguments=['-d', os.path.join(pkg_ros_gz_sim_demos, 'rviz', 'vehicle.rviz')],
+        condition=IfCondition(LaunchConfiguration('rviz')),
+        parameters=[
+            {'use_sim_time': False},
+        ]
+    )
+    
+    # Launch number recogniton
+    # number_recognition = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(os.path.join('master_package', 'number_contour.py')),
+    #     )
+    
+    number_recognition = Node( 
+        package='cv_package', 
+        executable='number_contour'
+    )
 
     # robot = ExecuteProcess(
     #     cmd=["ros2", "run", "ros_gz_sim", "create", "-topic", "robot_description", "-z", "0.2"],
@@ -88,26 +96,40 @@ def generate_launch_description():
     #     ]
     # )
 
-    # slam_toolbox = Node( 
-    #     package='slam_toolbox', 
-    #     executable='async_slam_toolbox_node', 
-    #     parameters=[
-    #             get_package_share_directory('roslab') + '/config/mapping.yaml'
-    #     ], 
-    #     output='screen',
-    # )
+    slam_toolbox = Node( 
+        package='slam_toolbox', 
+        executable='async_slam_toolbox_node', 
+        parameters=[
+                get_package_share_directory('master_package') + '/config/mapping.yaml'
+        ], 
+        output='screen',
+    )
 
-    # pioneer_base_fp_link_tf = Node(package='tf2_ros', 
-    #     executable='static_transform_publisher', 
-    #     name='base_fp_linkTF', 
-    #     output='log', 
-    #     arguments=['0.0', '0.0', '0.0', '0.0', '0.0', '0.0',  'pioneer3at_body/base_footprint', 'base_footprint']
-    # )
+    phidgets = ExecuteProcess(
+        cmd=["ros2", "launch", "phidgets_spatial", "spatial-launch.py"]
+    )
+    
+    robot_localization = Node(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node',
+        output='screen',
+        parameters=[
+            get_package_share_directory('master_package') + 'config/ekf.yaml', 
+            # {'use_sim_time': use_sim_time}
+    ])
 
-    # joint_state_pub = Node(
-    #     package='joint_state_publisher',
-    #     executable='joint_state_publisher'
-    # )
+    pioneer_base_fp_link_tf = Node(package='tf2_ros', 
+        executable='static_transform_publisher', 
+        name='base_fp_linkTF', 
+        output='log', 
+        arguments=['0.0', '0.0', '0.0', '0.0', '0.0', '0.0',  'pioneer3at_body/base_footprint', 'base_footprint']
+    )
+
+    joint_state_pub = Node(
+        package='joint_state_publisher',
+        executable='joint_state_publisher'
+    )
 
     # A gui tool for easy tele-operation.
     # robot_steering = Node(
@@ -147,12 +169,19 @@ def generate_launch_description():
                 ])
             ]),
     )
-    
-    # lidar = ExecuteProcess(
-    #     cmd=["ros2", "launch", "sick_scan_xd", "sick_tim_7xx.launch.py"]
-    # )
 
-    # camera = Node(
+    robot = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([
+                PathJoinSubstitution([
+                    FindPackageShare('master_package'),
+                    'launch',
+                    'robot.launch.py'
+                ])
+            ]),
+    )
+    
+
+    # Node(
     #         package='v4l2_camera',
     #         executable='v4l2_camera_node',
     #         output='screen',
@@ -161,25 +190,6 @@ def generate_launch_description():
     #             'camera_frame_id': 'camera_link_optical'
     #             }]
     # )
-    
-    
-    phidgets = ComposableNodeContainer(
-            name='phidgets_container',
-            namespace='',
-            package='rclcpp_container',
-            executable='component_container',
-            output='screen',
-            compostable_node_description=[
-                ComposableNode(
-                    package='phidgets_spatial',
-                    plugin='phidgets::SpatialRosI',
-                    name='phidgets_spatial',
-                    parameters=[
-                        os.path.join(get_package_share_directory("p3at_bringup"), "config", "imu.yaml")
-                    ]),
-            ],
-            output='both',
-    )
 
     return LaunchDescription([
         # rviz_launch_arg,
@@ -190,12 +200,13 @@ def generate_launch_description():
         # rviz,
         # robot_steering,
         # bridge,
+        number_recognition,
         # slam_toolbox,
+        phidgets,
         # pioneer_base_fp_link_tf,
         # aria_node,
         # test,
-        # camera,
         lidar,
-        joystick,
-        phidgets,
+        joystick
+        # robot
     ])
