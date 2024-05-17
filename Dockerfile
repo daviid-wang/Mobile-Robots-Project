@@ -26,11 +26,11 @@ RUN cd AriaCoda && make && make install
 RUN apt install wget && wget https://bootstrap.pypa.io/get-pip.py && python3 ./get-pip.py 
 
 #install depthai and opencv
-RUN pip install numpy && pip install depthai-sdk && pip3 install opencv-python && pip install easyocr && pip install matplotlib && pip install collection
+RUN pip install numpy && pip3 install opencv-python && pip install easyocr && pip install matplotlib && pip install collection
 # && pip3 install --upgrade setuptools && pip3 install ez_setup && pip3 install os-sys
 
 #install joy and teleop
-RUN apt install ros-humble-joy-linux ros-humble-teleop-twist-joy ros-humble-phidgets-drivers ros-humble-camera-info-manager ros-humble-sick-scan-xd ros-humble-rviz2 libxcb-xinerama0 ros-humble-slam-toolbox ros-humble-robot-localization ros-humble-joint-state-publisher ros-humble-joint-state-publisher-gui -y
+RUN apt install ros-humble-joy-linux ros-humble-teleop-twist-joy ros-humble-depthai-ros ros-humble-phidgets-drivers ros-humble-camera-info-manager ros-humble-sick-scan-xd ros-humble-rviz2 libxcb-xinerama0 ros-humble-slam-toolbox ros-humble-robot-localization ros-humble-joint-state-publisher ros-humble-joint-state-publisher-gui -y
 # RUN cd joy
 RUN apt-get install --reinstall libqt5core5a libqt5gui5 libqt5widgets5
 # Copy the content of the local src directory to the working directory

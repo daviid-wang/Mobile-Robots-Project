@@ -12,16 +12,16 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
 
     # pkg_ros_gz_sim_demos = get_package_share_directory('roslab')
-    # pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
+    master_package = get_package_share_directory('master_package')
 
     # sdf_file = os.path.join(pkg_ros_gz_sim_demos, 'worlds', 'basic_urdf.sdf')
-    # robot_file = os.path.join(pkg_ros_gz_sim_demos, 'robots', 'pioneer.urdf')
+    robot_file = os.path.join(master_package, 'robots', 'pioneer.urdf')
 
     # with open(sdf_file, 'r') as infp:
     #     world_desc = infp.read()
 
-    # with open(robot_file, 'r') as infp:
-    #     robot_desc = infp.read()
+    with open(robot_file, 'r') as infp:
+        robot_desc = infp.read()
 
     rviz_launch_arg = DeclareLaunchArgument(
         'rviz', default_value='true',
@@ -41,16 +41,16 @@ def generate_launch_description():
 
 
     # Get the parser plugin convert sdf to urdf using robot_description topic
-    # robot_state_publisher = Node(
-    #     package='robot_state_publisher',
-    #     executable='robot_state_publisher',
-    #     name='robot_state_publisher',
-    #     output='both',
-    #     parameters=[
-    #         {'use_sim_time': False},
-    #         {'robot_description': robot_desc},
-    #     ]
-    # )
+    robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        output='both',
+        parameters=[
+            {'use_sim_time': False},
+            {'robot_description': robot_desc},
+        ]
+    )
 
     # Launch rviz
     rviz = Node(
@@ -195,15 +195,15 @@ def generate_launch_description():
         # rviz_launch_arg,
         # gazebo,
         # robot,
-        # robot_state_publisher,
-        # joint_state_pub,
+        robot_state_publisher,
+        joint_state_pub,
         # rviz,
         # robot_steering,
         # bridge,
         number_recognition,
-        # slam_toolbox,
+        slam_toolbox,
         phidgets,
-        # pioneer_base_fp_link_tf,
+        pioneer_base_fp_link_tf,
         # aria_node,
         # test,
         lidar,
