@@ -73,6 +73,13 @@ def generate_launch_description():
         executable='number_contour'
     )
 
+    imu_remapping = Node(
+        package='master_package',
+        executable='remapping_imu',
+        name='IMU remapping nodes',
+        output='screen',
+    )
+
     # robot = ExecuteProcess(
     #     cmd=["ros2", "run", "ros_gz_sim", "create", "-topic", "robot_description", "-z", "0.2"],
     #     name="spawn robot",
@@ -200,6 +207,7 @@ def generate_launch_description():
         # rviz,
         # robot_steering,
         # bridge,
+        imu_remapping,
         number_recognition,
         slam_toolbox,
         phidgets,
