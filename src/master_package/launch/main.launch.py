@@ -6,7 +6,8 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, Exec
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, TextSubstitution
-from launch_ros.actions import Node
+from launch_ros.actions import Node, ComposableNodeContainer
+from launch_ros.descriptions import ComposableNode
 from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
@@ -76,7 +77,10 @@ def generate_launch_description():
     imu_remapping = Node(
         package='master_package',
         executable='remapping_imu',
-        name='IMU remapping nodes',
+        # parameters=[
+        #     {'input_topic': 'imu/data_raw'},
+        #     {'output_topic': 'imu/data_remapped'},
+        # ]
         output='screen',
     )
 
@@ -115,22 +119,39 @@ def generate_launch_description():
     phidgets = ExecuteProcess(
         cmd=["ros2", "launch", "phidgets_spatial", "spatial-launch.py"]
     )
+
+    phidgets2 = ComposableNodeContainer(
+        name = 'imu_container',
+        namespace='',
+        package='rclcpp_components',
+        executable='component_container',
+        composable_node_descriptions=[
+            ComposableNode(
+                package = 'phidget_spatial',
+                plugin='phidgets::SpatialRosI',
+                name='phidgets_spatial',
+                parameters=[
+                    os.path.join(get_package_share_directory("master_package")+'/config'+'/imu.yaml')
+                ],
+            )
+        ]
+    )
     
     robot_localization = Node(
         package='robot_localization',
         executable='ekf_node',
         name='ekf_filter_node',
         output='screen',
-        parameters=[
-            get_package_share_directory('master_package') + 'config/ekf.yaml', 
+        parameters=[get_package_share_directory('master_package') + 'config/ekf.yaml'], 
+        remappings = [('/odomotry/filtered', '/odom')]
             # {'use_sim_time': use_sim_time}
-    ])
+)
 
     pioneer_base_fp_link_tf = Node(package='tf2_ros', 
         executable='static_transform_publisher', 
         name='base_fp_linkTF', 
         output='log', 
-        arguments=['0.0', '0.0', '0.0', '0.0', '0.0', '0.0',  'pioneer3at_body/base_footprint', 'base_footprint']
+        arguments=['0.0', '0.0', '0.0', '0.0', '0.0', '0.0',  'pioneer3at_body/base_link', 'base_link']
     )
 
     joint_state_pub = Node(
@@ -207,10 +228,11 @@ def generate_launch_description():
         # rviz,
         # robot_steering,
         # bridge,
+        robot_localization,
         imu_remapping,
         number_recognition,
         slam_toolbox,
-        phidgets,
+        phidgets2,
         pioneer_base_fp_link_tf,
         # aria_node,
         # test,

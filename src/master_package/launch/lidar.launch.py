@@ -17,11 +17,18 @@ def generate_launch_description():
     # )
     
     lidar = Node(
-            package='sick_scan_xd',
-            executable='sick_generic_caller',
-            output='screen',
-            arguments=["launch/sick_tim_7xx.launch.py"]
-        )
+        package='sick_scan_xd',
+        executable='sick_generic_caller',
+        output='screen',
+        arguments=[
+            # "launch/sick_tim_7xx.launch.py",
+            'hostname:=192.168.0.1',
+            'scanner_type:=sick_tim_7xx'
+        ],
+        remappings=[
+            ('/sick_tim_7xx/scan', '/lidar')
+        ]
+    )
 
     return LaunchDescription([
             lidar,
