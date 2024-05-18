@@ -1,16 +1,18 @@
-version: "3"
+version: "3.9"
 
 services:
   base:
     image: mobile-robots-project:latest
     build:
-      # context: .
+      context: .
       dockerfile: Dockerfile
       args:
         ROS_DISTRO: humble
       target: base
-    # stdin_open: true
+    stdin_open: true
     volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
       - type: bind
         source: /dev
         target: /dev
@@ -29,7 +31,7 @@ services:
     # command: ros2 launch master_package main.launch.py
     # command: /bin/bash -c "source ./install/setup.bash" && ros2 run ariaNode ariaNode -rp /dev/ttyUSB0 && ros2 interface show geometry_msgs/msg/Twist
     # command: ros2 run ariaNode ariaNode && ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.5, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}"
-  controller:
+  aria:
     image: mobile-robots-project
     build: .
     volumes:
@@ -60,31 +62,46 @@ services:
       - ROS_DOMAIN_ID=153
       - ROS_MASTER_URI=http://localhost:11311
     command: ros2 launch depthai_ros_driver camera.launch.py
-  rviz:
-      image: mobile-robots-project:latest
-      network_mode: host
-      command: ros2 launch master_package rviz.launch.py
-      privileged: True
-      environment:
-        - DISPLAY
-      volumes:
-        - /tmp/.X11-unix:/tmp/.X11-unix:rw
-        - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
-        - type: bind
-          source: /dev/shm
-          target: /dev/shm
-  # lidar:
-  #   image: mobile-robots-project:latest
-  #   build: .
-  #   depends_on:
-  #   - base
-  #   volumes:
-  #     - type: bind
-  #       source: /dev
-  #       target: /dev
-  #   device_cgroup_rules:
-  #     - 'c *:* rmw'
-  #   environment:
-  #     - ROS_DOMAIN_ID=153
-  #     - ROS_MASTER_URI=http://localhost:11311
-  #   command: ros2 launch depthai_ros_driver camera.launch.py
+  # rviz:
+  #     image: mobile-robots-project:latest
+  #     network_mode: host
+  #     command: ros2 launch master_package rviz.launch.py
+  #     privileged: True
+  #     environment:
+  #       - DISPLAY
+  #     volumes:
+  #       - /tmp/.X11-unix:/tmp/.X11-unix:rw
+  #       - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
+  #       - type: bind
+  #         source: /dev/shm
+  #         target: /dev/shm
+  lidar:
+    image: mobile-robots-project:latest
+    build: .
+    depends_on:
+    - base
+    volumes:
+      - type: bind
+        source: /dev
+        target: /dev
+    device_cgroup_rules:
+      - 'c *:* rmw'
+    environment:
+      - ROS_DOMAIN_ID=153
+      - ROS_MASTER_URI=http://localhost:11311
+    command: ros2 launch sick_scan_xd sick_tim_7xx.launch.py
+  imu:
+    image: mobile-robots-project:latest
+    build: .
+    depends_on:
+    - base
+    volumes:
+      - type: bind
+        source: /dev
+        target: /dev
+    device_cgroup_rules:
+      - 'c *:* rmw'
+    environment:
+      - ROS_DOMAIN_ID=153
+      - ROS_MASTER_URI=http://localhost:11311
+    command: ros2 launch phidgets_spatial spatial-launch.py

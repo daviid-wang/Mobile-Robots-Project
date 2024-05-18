@@ -114,6 +114,9 @@ def generate_launch_description():
                 get_package_share_directory('master_package') + '/config/mapping.yaml'
         ], 
         output='screen',
+        remappings=[
+            ('/sick_tim_7xx/scan', '/scan'),
+        ],
     )
 
     phidgets = ExecuteProcess(
@@ -134,7 +137,8 @@ def generate_launch_description():
                     os.path.join(get_package_share_directory("master_package")+'/config'+'/imu.yaml')
                 ],
             )
-        ]
+        ],
+        output='both',
     )
     
     robot_localization = Node(
@@ -142,12 +146,13 @@ def generate_launch_description():
         executable='ekf_node',
         name='ekf_filter_node',
         output='screen',
-        parameters=[get_package_share_directory('master_package') + 'config/ekf.yaml'], 
+        parameters=[get_package_share_directory('master_package') + '/config/ekf.yaml'], 
         remappings = [('/odomotry/filtered', '/odom')]
             # {'use_sim_time': use_sim_time}
 )
 
-    pioneer_base_fp_link_tf = Node(package='tf2_ros', 
+    pioneer_base_fp_link_tf = Node(
+        package='tf2_ros', 
         executable='static_transform_publisher', 
         name='base_fp_linkTF', 
         output='log', 
@@ -184,6 +189,16 @@ def generate_launch_description():
                     FindPackageShare('master_package'),
                     'launch',
                     'joystick.launch.py'
+                ])
+            ]),
+    )
+
+    rvizLaunch = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([
+                PathJoinSubstitution([
+                    FindPackageShare('master_package'),
+                    'launch',
+                    'rviz.launch.py'
                 ])
             ]),
     )
@@ -225,6 +240,7 @@ def generate_launch_description():
         # robot,
         robot_state_publisher,
         joint_state_pub,
+        # rvizLaunch,
         # rviz,
         # robot_steering,
         # bridge,
@@ -232,11 +248,11 @@ def generate_launch_description():
         imu_remapping,
         number_recognition,
         slam_toolbox,
-        phidgets2,
+        # phidgets2,
         pioneer_base_fp_link_tf,
         # aria_node,
         # test,
-        lidar,
+        # lidar,
         joystick
         # robot
     ])

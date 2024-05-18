@@ -12,15 +12,26 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
 
-    # rviz_launch_arg = DeclareLaunchArgument(
-    #     'rviz', default_value='true',
-    #     description='Open RViz.'
+    rviz_launch_arg = DeclareLaunchArgument(
+        'rviz', default_value='true',
+        description='Open RViz.'
+    )
+    
+    # rviz = ExecuteProcess(
+    #     cmd=["rviz2"]
     # )
     
-    rviz = ExecuteProcess(
-        cmd=["rviz2"]
+    rviz = Node(
+        package='rviz2',
+        executable='rviz2',
+        # arguments=['-d', os.path.join(pkg_ros_gz_sim_demos, 'rviz', 'vehicle.rviz')],
+        condition=IfCondition(LaunchConfiguration('rviz')),
+        parameters=[
+            {'use_sim_time': False},
+        ]
     )
+        
     return LaunchDescription([
-            # rviz_launch_arg,
+            rviz_launch_arg,
             rviz,
     ])

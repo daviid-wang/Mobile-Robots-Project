@@ -10,12 +10,12 @@ class ImuRemapNode(Node):
             'imu/data_raw',
             self.imu_callback,
             10)
-        self.publisher = self.create_publisher(Imu, 'imu/data_remapped', 10)
+        self.publisher = self.create_publisher(Imu, 'imu_remapped', 10)
         # self.get_logger().info('IMU Remap Node has been started.')
 
     def imu_callback(self, msg):
         # Negate the yaw velocity
-        msg.angular_velocity.z = -msg.angular_velocity.z
+        msg.angular_velocity.z = -1*msg.angular_velocity.z
 
         # Publish the modified message
         self.publisher.publish(msg)
