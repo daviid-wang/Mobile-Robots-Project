@@ -1,117 +1,85 @@
 import numpy as np
 import cv2
-from PIL import Image
-from keras import layers
 import matplotlib.pyplot as plt
-import rclpy
-from rclpy.node import Node
-from sensor_msgs.msg import Image
-from std_msgs.msg import Int32
-from cv_bridge import CvBridge
-from collections import Counter
-     
+
+class COLNode(node):
+    def __init__(self):
+        super().__init__('col_detection_node')
+        self.subscription = self.create_subscription(Image, 'camera/image_raw', self.listener_callback, 10)
+        self.publisher = self.create_publisher(Str, 'col_detection', 10)
+        self.bridge = CvBridge()
+        self.fig, self.ax = plt.subplots()
+        self.ax.axis('off')
+        plt.ion()
         
-def get_limits(color):
-    c = np.uint8([[color]])  # BGR values
-    hsvC = cv2.cvtColor(c, cv2.COLOR_BGR2HSV)
+        self.exit_program = False
+        self.fig.canvas.mpl_connect('button_press_event', self.on_key)
+        
 
-    hue = hsvC[0][0][0]  # Get the hue value
-
-    # Handle red hue wrap-around
-    if hue >= 165:  # Upper limit for divided red hue
-        lowerLimit = np.array([hue - 10, 100, 100], dtype=np.uint8)
-        upperLimit = np.array([180, 255, 255], dtype=np.uint8)
-    elif hue <= 15:  # Lower limit for divided red hue
-        lowerLimit = np.array([0, 100, 100], dtype=np.uint8)
-        upperLimit = np.array([hue + 10, 255, 255], dtype=np.uint8)
-    else:
-        lowerLimit = np.array([hue - 10, 100, 100], dtype=np.uint8)
-        upperLimit = np.array([hue + 10, 255, 255], dtype=np.uint8)
-
-    return lowerLimit, upperLimit
-
-yellow = [0, 255, 255]  # yellow in BGR colorspace
-red    = [0,0,255]        # red BGR
-cap = cv2.VideoCapture(0)
-while True:
-    ret, frame = cap.read()
-
-    hsvImage = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-
-    lowerLimit, upperLimit = get_limits(color=red)
-    #lowerLimit1, upperLimit1 = get_limits(color=red)
-    #new_lower_lim = np.minimum(lowerLimit, lowerLimit1)
-    #new_upper_lim = np.maximum(upperLimit, upperLimit1)
-
-    mask = cv2.inRange(hsvImage, lowerLimit, upperLimit)
-
-    mask_ = Image.fromarray(mask)
-
-    bbox = mask_.getbbox()
-
-    if bbox is not None:
-        x1, y1, x2, y2 = bbox
-
-        frame = cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 5)
-
-    cv2.imshow('frame', frame)
-
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-cap.release()
-
-cv2.destroyAllWindows()
-
-# def calculate_histogram(image):
-#     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-#     hue = hsv[:,:,0]
-#     # Calculate the histogram of the hue channel
-#     hist = cv2.calcHist([hue], [0], None, [180], [0, 180])
-#     plt.plot(hist)
-#     plt.show()
-#     return hist
-
-# def find_color_ranges(hist, threshold=0.1):
-#     peaks = []
-#     # Find peaks above a certain threshold
-#     for i in range(1, len(hist) - 1):
-#         if hist[i] > threshold * np.max(hist) and hist[i] > hist[i - 1] and hist[i] > hist[i + 1]:
-#             peaks.append(i)
-#     return peaks
-
-# def apply_color_mask(hsv, peak):
-#     # Define a reasonable range around the peak
-#     lower_bound = max(0, peak - 10)
-#     upper_bound = min(180, peak + 10)
-#     mask = cv2.inRange(hsv, (lower_bound, 100, 100), (upper_bound, 255, 255))
-#     return mask
-
-# cap = cv2.VideoCapture(0)
-
-# while True:
-#     ret, frame = cap.read()
-#     if not ret:
-#         break
-
-#     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-#     hist = calculate_histogram(frame)
-#     peaks = find_color_ranges(hist)
-
-#     combined_mask = np.zeros_like(hsv[:,:,0])
-#     for peak in peaks:
-#         mask = apply_color_mask(hsv, peak)
-#         combined_mask = cv2.bitwise_or(combined_mask, mask)
-
-#     # Display the result
-#     result = cv2.bitwise_and(frame, frame, mask=combined_mask)
-#     cv2.imshow('frame', result)
-
-#     if cv2.waitKey(1) & 0xFF == ord('q'):
-#         break
-
-# cap.release()
-# cv2.destroyAllWindows()
-
-
-
+    def on_key(self, event):
+        if event.key == 'q':
+            exit_program = True
+            
+    def listener_callback(self, message):
+        frame = self.bridge.imgmsg_to_cv2(message, ideal_encoding = 'bgr8')
+        hsvFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        
+        lower_red = np.array([136,87,11], np.uint8)
+        upper_red = np.array([180,255,255], np.uint8)
+        mask_red = cv2.inRange(hsvFrame, lower_red, upper_red)
+        
+        lower_yellow = np.array([20,100,100], np.uint8)
+        upper_yellow = np.array([30,255,255], np.uint8)
+        mask_yellow = cv2.inRange(hsvFrame, lower_yellow, upper_yellow)  
+        
+        kernel = np.ones((5,5), "uint8")
+        
+        mask_yellow = cv2.dilate(mask_yellow, kernel) 
+        yellow_res = cv2.bitwise_and(frame, frame, mask = mask_yellow) 
+        
+        mask_red = cv2.dilate(mask_red, kernel)    
+        red_res = cv2.bitwise_and(frame, frame, mask = mask_red)
+        
+        contours, _ = cv2.findContours(mask_red, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        for _, contour in enumerate(contours):
+            area = cv2.contourArea(contour)
+            if area > 300:
+                x,y,w,h = cv2.boundingRect(contour)
+                frame = cv2.rectangle(frame, (x,y), (x+w, y+h), (0,0,255), 2)
+                cv2.putText(frame, "RED", (x,y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,0,255))
+                self.publisher.publish(Str(data = "Red"))
+                self.get_logger().info("RED COLOUR!!!!!")                
+        
+        contours, _ cv2.findContours(mask_yellow, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        for _, contour in enumerate(contours):
+            area = cv2.contourArea(contour)
+            if area > 300:
+                x,y,w,h = cv2.boundingRect(contour)
+                frame = cv2.rectangle(frame, (x,y), (x+w, y+h), (0,255,255), 2)
+                cv2.putText(frame, "YELLOW", (x,y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,255,255))
+                self.publisher.publish(Str(data = "Yellow"))
+                self.get_logger().info("YELLOW COLOUR!!!!!")   
+        
+        self.ax.clear()
+        self.ax.imshow(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+        plt.draw()
+        plt.pause(0.001)
+        if self.exit_program:
+            rclpy.shutdown()
+    
+    def main(args=None):
+        rclpy.init(args=args)
+        node = col_detection_node()
+        try:
+            rcply.spin(node)
+        except KeyboardInterrupt:
+            pass
+        finally:
+            node.destroy_node()
+            plt.close()
+    
+    if __name__ == '__main__':
+        main()
+        
+    
+        

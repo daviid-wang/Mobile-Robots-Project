@@ -16,7 +16,7 @@ def on_key(event):
     global exit_program
     if event.key == 'q':
         exit_program = True
-
+    
 fig.canvas.mpl_connect('key_press_event', on_key)
 
 # Start a while loop
