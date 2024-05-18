@@ -11,7 +11,7 @@ class ImuRemapNode(Node):
             self.imu_callback,
             10)
         self.publisher = self.create_publisher(Imu, 'imu/data_remapped', 10)
-        self.get_logger().info('IMU Remap Node has been started.')
+        # self.get_logger().info('IMU Remap Node has been started.')
 
     def imu_callback(self, msg):
         # Negate the yaw velocity
@@ -19,7 +19,7 @@ class ImuRemapNode(Node):
 
         # Publish the modified message
         self.publisher.publish(msg)
-        self.get_logger().info('Published remapped IMU data.')
+        # self.get_logger().info('Published remapped IMU data.')
 
 def main(args=None):
     rclpy.init(args=args)

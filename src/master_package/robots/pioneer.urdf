@@ -1,13 +1,6 @@
 <?xml version="1.0" ?>
 
 <robot name="pioneer3at_body">
-  <link name = "base_footprint"/>
-  <joint name = "base_joint" type = "fixed">
-    <parent link = "base_footprint"/>
-    <child link = "base_link"/>
-    <origin xyz = "0.0 0.0 0.010" rpy="0 0 0"/>
-  </joint>
-
   <link name="base_link"/>
 
   <!-- Chassis -->
@@ -21,14 +14,14 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0.0"/>
       <geometry name="pioneer_geom">
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/chassis.dae"/>
+        <mesh filename="file:///src/master_package/meshes/chassis.dae"/>
       </geometry>
       <material name="ChassisRed"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0.0"/>
       <geometry>
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/chassis.dae"/>
+        <mesh filename="file:///src/master_package/meshes/chassis.dae"/>
       </geometry>
     </collision>
   </link>
@@ -58,7 +51,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry name="pioneer_geom">
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/top.dae"/>
+        <mesh filename="file:///src/master_package/meshes/top.dae"/>
       </geometry>
       <material name="TopBlack">
         <color rgba="0.038 0.038 0.038 1.0"/>
@@ -90,7 +83,7 @@
     <visual name="front_left_axle">
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry name="pioneer_geom">
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/p3at_meshes/axle.dae"/>
+        <mesh filename="file:///src/master_package/meshes/p3at_meshes/axle.dae"/>
       </geometry>
       <material name="AxleGrey">
         <color rgba="0.5 0.5 0.5 1"/>
@@ -121,7 +114,7 @@
     <visual name="front_left_hub">
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry name="pioneer_geom">
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/p3at_meshes/left_hubcap.dae"/>
+        <mesh filename="file:///src/master_package/meshes/p3at_meshes/left_hubcap.dae"/>
       </geometry>
       <material name="HubcapYellow">
         <color rgba="1.0 0.811 0.151 1.0"/>
@@ -152,7 +145,7 @@
     <visual name="front_left_wheel">
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry name="pioneer_geom">
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/p3at_meshes/wheel.dae"/>
+        <mesh filename="file:///src/master_package/meshes/p3at_meshes/wheel.dae"/>
       </geometry>
       <material name="WheelBlack">
         <color rgba="0.117 0.117 0.117 1"/>
@@ -161,7 +154,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/p3at_meshes/wheel.dae"/>
+        <mesh filename="file:///src/master_package/meshes/p3at_meshes/wheel.dae"/>
         <cylinder length="0.075" radius="0.111"/>
       </geometry>
     </collision>
@@ -195,7 +188,7 @@
     <visual name="front_right_axle">
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry name="pioneer_geom">
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/p3at_meshes/axle.dae"/>
+        <mesh filename="file:///src/master_package/meshes/p3at_meshes/axle.dae"/>
       </geometry>
       <material name="AxleGrey">
         <color rgba="0.5 0.5 0.5 1"/>
@@ -226,7 +219,7 @@
     <visual name="front_right_hub">
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry name="pioneer_geom">
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/p3at_meshes/right_hubcap.dae"/>
+        <mesh filename="file:///src/master_package/meshes/p3at_meshes/right_hubcap.dae"/>
       </geometry>
       <material name="HubcapYellow">
         <color rgba="1.0 0.811 0.151 1.0"/>
@@ -257,7 +250,7 @@
     <visual name="front_right_wheel">
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry name="pioneer_geom">
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/p3at_meshes/wheel.dae"/>
+        <mesh filename="file:///src/master_package/meshes/p3at_meshes/wheel.dae"/>
       </geometry>
       <material name="WheelBlack">
         <color rgba="0.117 0.117 0.117 1"/>
@@ -266,7 +259,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/><!-- Review this -->
       <geometry>
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/p3at_meshes/wheel.dae"/>
+        <mesh filename="file:///src/master_package/meshes/p3at_meshes/wheel.dae"/>
         <cylinder length="0.075" radius="0.111"/>
       </geometry>
     </collision>
@@ -300,7 +293,7 @@
     <visual name="back_left_axle">
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry name="pioneer_geom">
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/p3at_meshes/axle.dae"/>
+        <mesh filename="file:///src/master_package/meshes/p3at_meshes/axle.dae"/>
       </geometry>
       <material name="AxleGrey">
         <color rgba="0.5 0.5 0.5 1"/>
@@ -331,7 +324,7 @@
     <visual name="back_left_hub">
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry name="pioneer_geom">
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/p3at_meshes/right_hubcap.dae"/>
+        <mesh filename="file:///src/master_package/meshes/p3at_meshes/right_hubcap.dae"/>
       </geometry>
       <material name="HubcapYellow">
         <color rgba="1.0 0.811 0.151 1.0"/>
@@ -362,7 +355,7 @@
     <visual name="back_left_wheel">
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry name="pioneer_geom">
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/p3at_meshes/wheel.dae"/>
+        <mesh filename="file:///src/master_package/meshes/p3at_meshes/wheel.dae"/>
       </geometry>
       <material name="WheelBlack">
         <color rgba="0.117 0.117 0.117 1"/>
@@ -371,7 +364,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/><!-- Review this -->
       <geometry>
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/p3at_meshes/wheel.dae"/>
+        <mesh filename="file:///src/master_package/meshes/p3at_meshes/wheel.dae"/>
         <cylinder length="0.075" radius="0.111"/>
       </geometry>
     </collision>
@@ -405,7 +398,7 @@
     <visual name="back_right_axle">
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry name="pioneer_geom">
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/p3at_meshes/axle.dae"/>
+        <mesh filename="file:///src/master_package/meshes/p3at_meshes/axle.dae"/>
       </geometry>
       <material name="AxleGrey">
         <color rgba="0.5 0.5 0.5 1"/>
@@ -436,7 +429,7 @@
     <visual name="back_right_hub">
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry name="pioneer_geom">
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/p3at_meshes/right_hubcap.dae"/>
+        <mesh filename="file:///src/master_package/meshes/p3at_meshes/right_hubcap.dae"/>
       </geometry>
       <material name="HubcapYellow">
         <color rgba="1.0 0.811 0.151 1.0"/>
@@ -467,7 +460,7 @@
     <visual name="back_right_wheel">
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry name="pioneer_geom">
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/p3at_meshes/wheel.dae"/>
+        <mesh filename="file:///src/master_package/meshes/p3at_meshes/wheel.dae"/>
       </geometry>
       <material name="WheelBlack">
         <color rgba="0.117 0.117 0.117 1"/>
@@ -476,7 +469,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/><!-- Review this -->
       <geometry>
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/p3at_meshes/wheel.dae"/>
+        <mesh filename="file:///src/master_package/meshes/p3at_meshes/wheel.dae"/>
         <cylinder length="0.075" radius="0.111"/>
       </geometry>
     </collision>
@@ -518,11 +511,11 @@
   <!-- lidar -->
   <joint name="laser_joint" type="fixed">
     <parent link="chassis" />
-    <child link="laser_frame" />
+    <child link="cloud" />
     <origin xyz="0.2 0 0.104" rpy="0 0 0"/>
   </joint>
 
-  <link name="laser_frame">
+  <link name="cloud">
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -532,7 +525,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/> 
       <geometry>
-        <mesh filename="file:///home/group7/Desktop/Mobile-Robots-Project/src/master_package/meshes/hokuyo1.dae"/>
+        <mesh filename="file:///src/master_package/meshes/hokuyo1.dae"/>
       </geometry>
     </visual>
     <inertial>
@@ -589,23 +582,23 @@
 
   <link name="cam_frame">
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <!-- <origin xyz="0 0 0" rpy="0 0 0"/> 
       <geometry>
         <box size="0.01 0.05 0.01"/>
       </geometry>
       <material name="greenCam">
         <color rgba="0 1.0 0 1.0"/>
-      </material>
+      </material> -->
     </visual>
   </link>
 
   <joint name="cam_optical_joint" type="fixed">
     <parent link="cam_frame" />
-    <child link="cam_optical_link" />
+    <child link="oak-d-base-frame" />
     <origin xyz="0.3 0 0.2" rpy="-1.65 0 -1.65"/>
   </joint>
 
-  <link name="cam_optical_link"></link>
+  <link name="oak-d-base-frame"></link>
 
   <gazebo reference="cam_frame">
     <material>Gazebo/Blue</material>
@@ -632,7 +625,6 @@
   
 
   <!-- IMU -->
-
   <gazebo reference="base_link">
     <sensor name="imu_sensor" type="imu">
       <always_on>1</always_on>
@@ -642,11 +634,12 @@
     </sensor>
   </gazebo>
 
-    <joint name="imu_joint" type="fixed">
-    <parent link="base_link" />
+  <joint name="imu_joint" type="fixed">
+    <parent link="chassis" />
     <child link="imu_link" />
     <origin xyz="0.3 0 0.2" rpy="0 0 0"/>
   </joint>
 
+  <link name="imu_link"/>
 
   </robot>
