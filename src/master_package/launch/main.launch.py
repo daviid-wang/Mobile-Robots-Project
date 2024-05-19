@@ -84,6 +84,16 @@ def generate_launch_description():
         output='screen',
     )
 
+    remapping_cv = Node(
+        package='master_package',
+        executable='remapping_cv',
+        # parameters=[
+        #     {'input_topic': 'imu/data_raw'},
+        #     {'output_topic': 'imu/data_remapped'},
+        # ]
+        output='screen',
+    )
+
     # robot = ExecuteProcess(
     #     cmd=["ros2", "run", "ros_gz_sim", "create", "-topic", "robot_description", "-z", "0.2"],
     #     name="spawn robot",
@@ -146,7 +156,7 @@ def generate_launch_description():
         executable='ekf_node',
         name='ekf_filter_node',
         output='screen',
-        parameters=[get_package_share_directory('master_package') + '/config/ekf_v2.yaml'], 
+        parameters=[get_package_share_directory('master_package') + '/config/ekf3.yaml'], 
         remappings = [('/odomotry/filtered', '/odom')]
             # {'use_sim_time': use_sim_time}
 )
@@ -246,6 +256,7 @@ def generate_launch_description():
         # bridge,
         robot_localization,
         imu_remapping,
+        remapping_cv,
         number_recognition,
         slam_toolbox,
         # phidgets2,

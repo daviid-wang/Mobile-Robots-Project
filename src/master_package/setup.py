@@ -27,7 +27,8 @@ setup(
     entry_points={
         'console_scripts': [
             'master_node = master_package.master_node:main',
-            'remapping_imu = master_package.remapping_imu:main'
+            'remapping_imu = master_package.remapping_imu:main',
+            'remapping_cv = master_package.remapping_cv:main'
         ],
     },
 )
