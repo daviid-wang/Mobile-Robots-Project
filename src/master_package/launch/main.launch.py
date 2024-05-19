@@ -146,7 +146,7 @@ def generate_launch_description():
         executable='ekf_node',
         name='ekf_filter_node',
         output='screen',
-        parameters=[get_package_share_directory('master_package') + '/config/ekf.yaml'], 
+        parameters=[get_package_share_directory('master_package') + '/config/ekf_v2.yaml'], 
         remappings = [('/odomotry/filtered', '/odom')]
             # {'use_sim_time': use_sim_time}
 )
