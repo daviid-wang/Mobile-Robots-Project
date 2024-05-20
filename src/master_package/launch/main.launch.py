@@ -171,7 +171,7 @@ def generate_launch_description():
         executable='ekf_node',
         name='ekf_filter_node',
         output='screen',
-        parameters=[get_package_share_directory('master_package') + '/config/ekf4.yaml'], 
+        parameters=[get_package_share_directory('master_package') + '/config/ekf.yaml'], 
         remappings = [('/odomotry/filtered', '/odom')]
             # {'use_sim_time': use_sim_time}
 )
@@ -271,9 +271,7 @@ def generate_launch_description():
         # bridge,
         robot_localization,
         imu_remapping,
-        remapping_cv,
-        #number_recognition,
-        #colour_tracking,
+        number_recognition,
         slam_toolbox,
         # phidgets2,
         pioneer_base_fp_link_tf,

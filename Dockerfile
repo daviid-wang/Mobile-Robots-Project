@@ -26,9 +26,9 @@ RUN cd AriaCoda && make && make install
 RUN apt install wget && wget https://bootstrap.pypa.io/get-pip.py && python3 ./get-pip.py 
 #install depthai and opencv
 RUN pip install numpy
-# RUN pip install easyocr
+RUN pip install easyocr
 RUN pip install matplotlib 
-# RUN pip install collection
+RUN pip install collection
 RUN pip3 install opencv-python
 
 # && pip3 install --upgrade setuptools && pip3 install ez_setup && pip3 install os-sys
