@@ -22,24 +22,31 @@ RUN apt-get update -y && \
 RUN git clone https://github.com/reedhedges/AriaCoda.git
 RUN cd AriaCoda && make && make install
 
-#install wget & pip
+# install wget & pip
 RUN apt install wget && wget https://bootstrap.pypa.io/get-pip.py && python3 ./get-pip.py 
-
 #install depthai and opencv
 RUN pip install numpy
-RUN pip install easyocr
+# RUN pip install easyocr
 RUN pip install matplotlib 
-RUN pip install collection
+# RUN pip install collection
 RUN pip3 install opencv-python
 
 # && pip3 install --upgrade setuptools && pip3 install ez_setup && pip3 install os-sys
 
 #install joy and teleop
 RUN apt install ros-humble-joy-linux ros-humble-teleop-twist-joy ros-humble-depthai-ros ros-humble-phidgets-drivers ros-humble-camera-info-manager ros-humble-sick-scan-xd ros-humble-rviz2 libxcb-xinerama0 ros-humble-slam-toolbox ros-humble-robot-localization ros-humble-joint-state-publisher ros-humble-joint-state-publisher-gui -y
+#instal apt install ros-humble-std-msgs
+RUN apt install ros-humble-std-msgs
+RUN apt install ros-humble-navigation2 ros-humble-nav2-bringup -y
+RUN apt install python3-rosbag -y
+# RUN git clone https://github.com/gaia-platform/rosbag2_snapshot.gitx
+# RUN cd src/
 # RUN cd joy
 RUN apt-get install --reinstall libqt5core5a libqt5gui5 libqt5widgets5
 # Copy the content of the local src directory to the working directory
 COPY . /project
+
+RUN export ROS_DOMAIN_ID=153
 
 RUN echo "xhost +" >> ~/.bashrc
 

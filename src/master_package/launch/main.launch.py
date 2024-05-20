@@ -16,7 +16,7 @@ def generate_launch_description():
     master_package = get_package_share_directory('master_package')
 
     # sdf_file = os.path.join(pkg_ros_gz_sim_demos, 'worlds', 'basic_urdf.sdf')
-    robot_file = os.path.join(master_package, 'robots', 'pioneer.urdf')
+    robot_file = os.path.join(master_package, 'robots', 'pioneer2.urdf')
 
     # with open(sdf_file, 'r') as infp:
     #     world_desc = infp.read()
@@ -73,10 +73,35 @@ def generate_launch_description():
         package='cv_package', 
         executable='number_contour'
     )
+    
+    colour_tracking = Node( 
+        package='cv_package', 
+        executable='col_detection'
+    )
 
+    manual_estop = Node(
+        package = 'master_package',
+        executable = 'estop'
+    )
+    
+    auto_estop = Node(
+        package = 'master_package',
+        executable = 'automatic_estop'
+    )
+    
     imu_remapping = Node(
         package='master_package',
         executable='remapping_imu',
+        # parameters=[
+        #     {'input_topic': 'imu/data_raw'},
+        #     {'output_topic': 'imu/data_remapped'},
+        # ]
+        output='screen',
+    )
+
+    remapping_cv = Node(
+        package='master_package',
+        executable='remapping_cv',
         # parameters=[
         #     {'input_topic': 'imu/data_raw'},
         #     {'output_topic': 'imu/data_remapped'},
@@ -146,7 +171,7 @@ def generate_launch_description():
         executable='ekf_node',
         name='ekf_filter_node',
         output='screen',
-        parameters=[get_package_share_directory('master_package') + '/config/ekf.yaml'], 
+        parameters=[get_package_share_directory('master_package') + '/config/ekf4.yaml'], 
         remappings = [('/odomotry/filtered', '/odom')]
             # {'use_sim_time': use_sim_time}
 )
@@ -156,7 +181,7 @@ def generate_launch_description():
         executable='static_transform_publisher', 
         name='base_fp_linkTF', 
         output='log', 
-        arguments=['0.0', '0.0', '0.0', '0.0', '0.0', '0.0',  'pioneer3at_body/base_link', 'base_link']
+        arguments=['0.0', '0.0', '0.0', '0.0', '0.0', '0.0',  'pioneer3at_body/base_footprint', 'base_footprint']
     )
 
     joint_state_pub = Node(
@@ -169,12 +194,12 @@ def generate_launch_description():
     #     package="rqt_robot_steering",
     #     executable="rqt_robot_steering",
     # )
-    # aria_node = ExecuteProcess(
-    #     cmd=[[
-    #         'ros2 run ariaNode ariaNode -rp /dev/ttyUSB0'
-    #     ]],
-    #     shell=True
-    # )
+    aria_node = ExecuteProcess(
+        cmd=[[
+            'ros2 run ariaNode ariaNode -rp /dev/ttyUSB0'
+        ]],
+        shell=True
+    )
     
     # test = ExecuteProcess(
     #     cmd=[[
@@ -235,24 +260,28 @@ def generate_launch_description():
     # )
 
     return LaunchDescription([
-        # rviz_launch_arg,
+        rviz_launch_arg,
         # gazebo,
         # robot,
         robot_state_publisher,
         joint_state_pub,
-        # rvizLaunch,
-        # rviz,
+        rvizLaunch,
+        rviz,
         # robot_steering,
         # bridge,
         robot_localization,
         imu_remapping,
-        number_recognition,
+        remapping_cv,
+        #number_recognition,
+        #colour_tracking,
         slam_toolbox,
         # phidgets2,
         pioneer_base_fp_link_tf,
         # aria_node,
         # test,
-        # lidar,
+        #lidar,
+        manual_estop,
+        auto_estop,
         joystick
         # robot
     ])

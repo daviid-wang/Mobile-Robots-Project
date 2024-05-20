@@ -25,7 +25,8 @@ setup(
     entry_points={
         'console_scripts': [
             'cv_node = cv_package.cv_node:main',
-            'number_contour = cv_package.number_contour:main'
+            'number_contour = cv_package.number_contour:main',
+            'col_detection = cv_package.col_detection:main'
         ],
     },
 )

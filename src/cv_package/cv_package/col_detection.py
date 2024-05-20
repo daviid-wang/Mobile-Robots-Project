@@ -7,6 +7,9 @@ from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 
+
+
+
 class ColourDetect(Node):
     def __init__(self):
         super().__init__('col_detection_node')
@@ -38,13 +41,13 @@ class ColourDetect(Node):
         upper_yellow = np.array([30,255,255],np.uint8)
         mask_yellow = cv2.inRange(hsvFrame, lower_yellow, upper_yellow)
         
-        kernal = np.ones((5,5), "unit8")
+        kernal = np.ones((5,5), np.uint8)
         
         mask_yellow = cv2.dilate(mask_yellow, kernal)
         yellow_res = cv2.bitwise_and(frame, frame, mask=mask_yellow)
         mask_red = cv2.dilate(mask_red, kernal)
         red_res = cv2.bitwise_and(frame, frame, mask=mask_red)     
-        
+        self.get_logger().info("TIME TO LOOK FOR COLOURED OBJECTS!")
         #make contours to track red
         conts, h = cv2.findContours(mask_red, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         for _, cont in enumerate(conts):

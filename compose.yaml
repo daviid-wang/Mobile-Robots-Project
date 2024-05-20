@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   base:
     image: mobile-robots-project:latest
@@ -8,7 +6,7 @@ services:
       dockerfile: Dockerfile
       args:
         ROS_DISTRO: humble
-      target: base
+      # target: base
     stdin_open: true
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
@@ -27,8 +25,6 @@ services:
       - ROS_MASTER_URI=http://localhost:11311
     # command: /bin/bash -c "source ./install/setup.bash" && ros2 run ariaPackage ariaPackage -rp /dev/ttyUSB0
     command: ros2 launch master_package main.launch.py
-    
-    # command: ros2 launch master_package main.launch.py
     # command: /bin/bash -c "source ./install/setup.bash" && ros2 run ariaNode ariaNode -rp /dev/ttyUSB0 && ros2 interface show geometry_msgs/msg/Twist
     # command: ros2 run ariaNode ariaNode && ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.5, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}"
   aria:
@@ -38,8 +34,8 @@ services:
       - type: bind
         source: /dev
         target: /dev
-    depends_on:
-    - base
+    # depends_on:
+    # - base
     device_cgroup_rules:
       - 'c *:* rmw'
     environment:
@@ -50,8 +46,6 @@ services:
   camera:
     image: mobile-robots-project:latest
     build: .
-    depends_on:
-    - base
     volumes:
       - type: bind
         source: /dev/bus/usb
@@ -78,8 +72,8 @@ services:
   lidar:
     image: mobile-robots-project:latest
     build: .
-    depends_on:
-    - base
+    # depends_on:
+    # - base
     volumes:
       - type: bind
         source: /dev
@@ -93,8 +87,8 @@ services:
   imu:
     image: mobile-robots-project:latest
     build: .
-    depends_on:
-    - base
+    # depends_on:
+    # - base
     volumes:
       - type: bind
         source: /dev
@@ -105,3 +99,19 @@ services:
       - ROS_DOMAIN_ID=153
       - ROS_MASTER_URI=http://localhost:11311
     command: ros2 launch phidgets_spatial spatial-launch.py
+  # rosbag:
+  #   image: mobile-robots-project:latest
+  #   build: .
+  #   depends_on:
+  #   - base
+  #   volumes:
+  #     - type: bind
+  #       source: /dev
+  #       target: /dev
+  #   device_cgroup_rules:
+  #     - 'c *:* rmw'
+  #   environment:
+  #     - ROS_DOMAIN_ID=153
+  #     - ROS_MASTER_URI=http://localhost:11311
+  #   # command: ros2 bag record -o rosbag_recording2 /cmd_vel /oak/rgb/image_raw /imu/data_raw /map /pose /scan
+  #   command: ros2 run rosbag2_snapshot snapshotter_client --ros-params -p action_type:=trigger_write
