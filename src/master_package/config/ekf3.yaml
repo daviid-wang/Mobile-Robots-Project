@@ -122,7 +122,7 @@ ekf_filter_node:
 # Further input parameter examples
         
         twist0: /cmd_vel_remapped
-        twist0: [false, false, false, 
+        twist0_config: [false, false, false, 
             false, false, false,
             true,  true,  false,
             false, false, true,
