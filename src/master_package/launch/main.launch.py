@@ -73,6 +73,10 @@ def generate_launch_description():
         package='cv_package', 
         executable='number_contour'
     )
+    colour_tracking = Node( 
+        package='cv_package', 
+        executable='col_detection'
+    )
 
     imu_remapping = Node(
         package='master_package',
@@ -258,6 +262,7 @@ def generate_launch_description():
         imu_remapping,
         remapping_cv,
         number_recognition,
+        colour_tracking,
         slam_toolbox,
         # phidgets2,
         pioneer_base_fp_link_tf,
