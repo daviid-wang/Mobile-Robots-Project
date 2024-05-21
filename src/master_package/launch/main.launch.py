@@ -186,13 +186,19 @@ def generate_launch_description():
         remappings = [('/odomotry/filtered', '/odom')]
             # {'use_sim_time': use_sim_time}
 )
-    nav2_launch = Node(
-            package='nav2_bringup',
-            executable='navigation_launch',
-            name='nav2_launch',
-            parameters=[get_package_share_directory('master_package') + '/config/costmap.yaml'],
-            output='screen'
 
+    nav2_launch = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([
+                PathJoinSubstitution([
+                    FindPackageShare('nav2_bringup'),
+                    'launch',
+                    'navigation_launch.py'
+                ])]),
+                launch_arguments={
+                    'map_subscribe_transcient_local': 'true',
+                    'use_sim_time': 'false',
+                    'params_file': os.path.join(get_package_share_directory('master_package'), 'config', 'nav2_params2.yaml'),
+                }.items(),
     )
 
     pioneer_base_fp_link_tf = Node(
@@ -279,7 +285,7 @@ def generate_launch_description():
     # )
 
     return LaunchDescription([
-        auto_switch,
+        # auto_switch,
         rviz_launch_arg,
         # gazebo,
         # robot,
@@ -300,7 +306,7 @@ def generate_launch_description():
         # aria_node,
         # test,
         #lidar,
-        # manual_estop,
+        manual_estop,
         # auto_estop,
         joystick,
         nav2_launch
