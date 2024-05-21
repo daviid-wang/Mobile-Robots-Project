@@ -36,7 +36,7 @@ def generate_launch_description():
         name="explore_node",
         namespace=namespace,
         executable="explore",
-        parameters=[config, {"use_sim_time": use_sim_time}],
+        parameters=[config, {"use_sim_time": False}], #I changed False from use_sim_time
         output="screen",
         remappings=remappings,
     )
