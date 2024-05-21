@@ -46,7 +46,8 @@ RUN apt-get install --reinstall libqt5core5a libqt5gui5 libqt5widgets5
 # Copy the content of the local src directory to the working directory
 COPY . /project
 
-RUN export ROS_DOMAIN_ID=87
+RUN export ROS_DOMAIN_ID=153
+
 
 RUN echo "xhost +" >> ~/.bashrc
 
