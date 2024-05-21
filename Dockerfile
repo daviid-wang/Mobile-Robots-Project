@@ -25,11 +25,11 @@ RUN cd AriaCoda && make && make install
 # install wget & pip
 RUN apt install wget && wget https://bootstrap.pypa.io/get-pip.py && python3 ./get-pip.py 
 #install depthai and opencv
-RUN pip install numpy
-RUN pip install easyocr
-RUN pip install matplotlib 
-RUN pip install collection
-RUN pip3 install opencv-python
+# RUN pip install numpy
+# RUN pip install easyocr
+# RUN pip install matplotlib 
+# RUN pip install collection
+# RUN pip3 install opencv-python
 
 # && pip3 install --upgrade setuptools && pip3 install ez_setup && pip3 install os-sys
 
@@ -47,6 +47,7 @@ RUN apt-get install --reinstall libqt5core5a libqt5gui5 libqt5widgets5
 COPY . /project
 
 RUN export ROS_DOMAIN_ID=153
+
 
 RUN echo "xhost +" >> ~/.bashrc
 
