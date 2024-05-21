@@ -11,6 +11,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
+      - "/dev:/dev"
       - type: bind
         source: /dev
         target: /dev
@@ -21,8 +22,11 @@ services:
     ipc: host
     privileged: true
     environment:
-      - ROS_DOMAIN_ID=153
+      - ROS_DOMAIN_ID=87
       - ROS_MASTER_URI=http://localhost:11311
+      - DISPLAY=:2
+      - QT_X11_NO_MITSHM=1
+      # - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
     # command: /bin/bash -c "source ./install/setup.bash" && ros2 run ariaPackage ariaPackage -rp /dev/ttyUSB0
     command: ros2 launch master_package main.launch.py
     # command: /bin/bash -c "source ./install/setup.bash" && ros2 run ariaNode ariaNode -rp /dev/ttyUSB0 && ros2 interface show geometry_msgs/msg/Twist
@@ -39,7 +43,7 @@ services:
     device_cgroup_rules:
       - 'c *:* rmw'
     environment:
-      - ROS_DOMAIN_ID=153
+      - ROS_DOMAIN_ID=87
       - ROS_MASTER_URI=http://localhost:11311
     # command: ros2 run joy joyNode && ros2 launch teleop_twist_joy teleop-launch.py
     command: ros2 run ariaNode ariaNode -rp /dev/ttyUSB0
@@ -53,7 +57,7 @@ services:
     device_cgroup_rules:
       - 'c *:* rmw'
     environment:
-      - ROS_DOMAIN_ID=153
+      - ROS_DOMAIN_ID=87
       - ROS_MASTER_URI=http://localhost:11311
     command: ros2 launch depthai_ros_driver camera.launch.py
   # rviz:
@@ -81,7 +85,7 @@ services:
     device_cgroup_rules:
       - 'c *:* rmw'
     environment:
-      - ROS_DOMAIN_ID=153
+      - ROS_DOMAIN_ID=87
       - ROS_MASTER_URI=http://localhost:11311
     command: ros2 launch sick_scan_xd sick_tim_7xx.launch.py
   imu:
@@ -96,7 +100,7 @@ services:
     device_cgroup_rules:
       - 'c *:* rmw'
     environment:
-      - ROS_DOMAIN_ID=153
+      - ROS_DOMAIN_ID=87
       - ROS_MASTER_URI=http://localhost:11311
     command: ros2 launch phidgets_spatial spatial-launch.py
   # rosbag:
@@ -111,7 +115,7 @@ services:
   #   device_cgroup_rules:
   #     - 'c *:* rmw'
   #   environment:
-  #     - ROS_DOMAIN_ID=153
+  #     - ROS_DOMAIN_ID=87
   #     - ROS_MASTER_URI=http://localhost:11311
   #   # command: ros2 bag record -o rosbag_recording2 /cmd_vel /oak/rgb/image_raw /imu/data_raw /map /pose /scan
   #   command: ros2 run rosbag2_snapshot snapshotter_client --ros-params -p action_type:=trigger_write

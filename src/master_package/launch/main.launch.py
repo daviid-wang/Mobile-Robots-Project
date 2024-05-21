@@ -74,6 +74,7 @@ def generate_launch_description():
         executable='number_contour'
     )
     
+    
     colour_tracking = Node( 
         package='cv_package', 
         executable='col_detection'
@@ -171,7 +172,7 @@ def generate_launch_description():
         executable='ekf_node',
         name='ekf_filter_node',
         output='screen',
-        parameters=[get_package_share_directory('master_package') + '/config/ekf.yaml'], 
+        parameters=[get_package_share_directory('master_package') + '/config/ekf4.yaml'], 
         remappings = [('/odomotry/filtered', '/odom')]
             # {'use_sim_time': use_sim_time}
 )
@@ -181,7 +182,7 @@ def generate_launch_description():
         executable='static_transform_publisher', 
         name='base_fp_linkTF', 
         output='log', 
-        arguments=['0.0', '0.0', '0.0', '0.0', '0.0', '0.0',  'pioneer3at_body/base_footprint', 'base_footprint']
+        arguments=['0.0', '0.0', '0.0', '0.0', '0.0', '0.0',  'base_footprint', 'pioneer3at_body/base_footprint']
     )
 
     joint_state_pub = Node(
@@ -265,21 +266,23 @@ def generate_launch_description():
         # robot,
         robot_state_publisher,
         joint_state_pub,
-        rvizLaunch,
+        # rvizLaunch,
         rviz,
         # robot_steering,
         # bridge,
         robot_localization,
         imu_remapping,
-        number_recognition,
+        remapping_cv,
+        #number_recognition,
+        #colour_tracking,
         slam_toolbox,
         # phidgets2,
-        pioneer_base_fp_link_tf,
+        # pioneer_base_fp_link_tf,
         # aria_node,
         # test,
         #lidar,
-        manual_estop,
-        auto_estop,
+        # manual_estop,
+        # auto_estop,
         joystick
         # robot
     ])
