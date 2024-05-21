@@ -186,6 +186,14 @@ def generate_launch_description():
         remappings = [('/odomotry/filtered', '/odom')]
             # {'use_sim_time': use_sim_time}
 )
+    nav2_launch = Node(
+            package='nav2_bringup',
+            executable='navigation_launch',
+            name='nav2_launch',
+            parameters=[get_package_share_directory('master_package') + '/config/costmap.yaml'],
+            output='screen'
+
+    )
 
     pioneer_base_fp_link_tf = Node(
         package='tf2_ros', 
@@ -294,6 +302,7 @@ def generate_launch_description():
         #lidar,
         # manual_estop,
         # auto_estop,
-        joystick
+        joystick,
+        nav2_launch
         # robot
     ])

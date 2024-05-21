@@ -30,7 +30,8 @@ setup(
             'remapping_imu = master_package.remapping_imu:main',
             'remapping_cv = master_package.remapping_cv:main',
             'estop = master_package.estop:main',
-            'automatic_estop = master_package.automatic_estop:main'
+            'automatic_estop = master_package.automatic_estop:main',
+            'main = master_package.main:main'
         ],
     },
 )

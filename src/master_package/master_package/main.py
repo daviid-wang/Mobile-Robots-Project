@@ -16,7 +16,7 @@ class ExplorerController(Node):
         curr_button_x = msg.buttons[2] == 1 # X  
         curr_button_o = msg.buttons[1] == 1 # O
         
-        if curr_button_x and not self.prev_button_state:
+        if curr_button_x and not self.prev_x_state:
             self.is_automatic = True #auto mode
             self.publish_mode(self.is_automatic)
         #self.pre_button_state = curr_button_state
@@ -50,6 +50,7 @@ class ExplorerController(Node):
         msg = Bool()
         msg.data = mode
         self.publisher.publish(msg)
+        #self.auto_callback(msg) #!Still broken
     
     def auto_callback(self, msg):
         if msg.data:

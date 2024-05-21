@@ -140,6 +140,13 @@ private:
   bool return_to_init_;
   std::string robot_base_frame_;
   bool resuming_ = false;
+
+  // Automatic control flag
+  bool automatic_;
+  
+  // Subscription for automatic control
+  rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr automatic_subscription_;
+  void automaticCallback(const std_msgs::msg::Bool::SharedPtr msg);
 };
 }  // namespace explore
 

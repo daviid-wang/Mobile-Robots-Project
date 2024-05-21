@@ -24,7 +24,7 @@ services:
     environment:
       - ROS_DOMAIN_ID=87
       - ROS_MASTER_URI=http://localhost:11311
-      - DISPLAY=:2
+      - DISPLAY=$DISPLAY
       - QT_X11_NO_MITSHM=1
       # - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
     # command: /bin/bash -c "source ./install/setup.bash" && ros2 run ariaPackage ariaPackage -rp /dev/ttyUSB0
@@ -103,6 +103,23 @@ services:
       - ROS_DOMAIN_ID=87
       - ROS_MASTER_URI=http://localhost:11311
     command: ros2 launch phidgets_spatial spatial-launch.py
+
+  # nav2:
+  #   image: mobile-robots-project:latest
+  #   build: .
+
+  #   volumes:
+  #     - type: bind
+  #       source: /dev
+  #       target: /dev
+  #   # args:
+  #   #   OVERLAY_MIXINS: "release ccache lld"
+  #   device_cgroup_rules:
+  #     - 'c *:* rmw'
+  #   environment:
+  #     - ROS_DOMAIN_ID=87
+  #     - ROS_MASTER_URI=http://localhost:11311
+  #   command: ros2 launch nav2_bringup tb3_simulation_launch.py slam:=True
   # rosbag:
   #   image: mobile-robots-project:latest
   #   build: .
@@ -120,55 +137,70 @@ services:
   #   # command: ros2 bag record -o rosbag_recording2 /cmd_vel /oak/rgb/image_raw /imu/data_raw /map /pose /scan
   #   command: ros2 run rosbag2_snapshot snapshotter_client --ros-params -p action_type:=trigger_write
   m-explore:
-    build:
-      context: ../
-      dockerfile: Dockerfile
-    # working_dir: /workspace/ros_ws
-    user: dev
-
-    network_mode: host
-    ports:
-      - "80:80"
-    expose:
-      - 80
-
-    init: true
-    privileged: true
-
-    environment:
-      - DISPLAY=$DISPLAY
-      - QT_X11_NO_MITSHM=1
-      - UDEV=1
+    image: mobile-robots-project:latest
+    build: .
+    stdin_open: true
+    tty: true
     volumes:
-      # Update this to wherever you want VS Code to mount the folder of your project
-      # - ..:/workspace/ros_ws/src/m-explore-ros2
-      # Forwards the local Docker socket to the container.
-      - /var/run/docker.sock:/var/run/docker.sock
-      # Enable GUI environments
-      - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - type: bind
         source: /dev
         target: /dev
-
-    # devices:
-    #   - /dev/bus/usb:/dev/bus/usb
-    #   # NVIDIA drivers to use OpenGL, etc...
-    #   - /dev/nvidia0:/dev/nvidia0
-    #   - /dev/nvidiactl:/dev/nvidiactl
-    #   - /dev/nvidia-uvm:/dev/nvidia-uvm
-    #   - /dev/input:/dev/input
-    #   - /dev/snd:/dev/snd
     device_cgroup_rules:
       - 'c *:* rmw'
+    environment:
+      - ROS_DOMAIN_ID=87
+      - ROS_MASTER_URI=http://localhost:11311
+    command: ros2 launch explore_lite explore.launch.py
+  # m-explore:
+  #   build: .
+  #     # context: ../
+  #     # dockerfile: Dockerfile
+  #   # working_dir: /workspace/ros_ws
+  #   # user: dev
 
-    # Uncomment the next four lines if you will use a ptrace-based debuggers like C++, Go, and Rust.
-    cap_add:
-      - SYS_PTRACE
-    security_opt:
-      - seccomp:unconfined
+  #   network_mode: host
+  #   ports:
+  #     - "80:80"
+  #   expose:
+  #     - 80
 
-    # Overrides default command so things don't shut down after the process ends.
-    stdin_open: true
-    tty: true
+  #   init: true
+  #   privileged: true
 
-    command: ros2 launch explore explore.launch.py
+  #   environment:
+  #     - DISPLAY=$DISPLAY
+  #     - QT_X11_NO_MITSHM=1
+  #     - UDEV=1
+  #   volumes:
+  #     # Update this to wherever you want VS Code to mount the folder of your project
+  #     # - ..:/workspace/ros_ws/src/m-explore-ros2
+  #     # Forwards the local Docker socket to the container.
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     # Enable GUI environments
+  #     - /tmp/.X11-unix:/tmp/.X11-unix:rw
+  #     - type: bind
+  #       source: /dev
+  #       target: /dev
+
+  #   # devices:
+  #   #   - /dev/bus/usb:/dev/bus/usb
+  #   #   # NVIDIA drivers to use OpenGL, etc...
+  #   #   - /dev/nvidia0:/dev/nvidia0
+  #   #   - /dev/nvidiactl:/dev/nvidiactl
+  #   #   - /dev/nvidia-uvm:/dev/nvidia-uvm
+  #   #   - /dev/input:/dev/input
+  #   #   - /dev/snd:/dev/snd
+  #   device_cgroup_rules:
+  #     - 'c *:* rmw'
+
+  #   # Uncomment the next four lines if you will use a ptrace-based debuggers like C++, Go, and Rust.
+  #   cap_add:
+  #     - SYS_PTRACE
+  #   security_opt:
+  #     - seccomp:unconfined
+
+  #   # Overrides default command so things don't shut down after the process ends.
+  #   stdin_open: true
+  #   tty: true
+
+  #   command: ros2 launch explore_lite explore.launch.py
