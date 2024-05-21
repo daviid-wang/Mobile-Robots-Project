@@ -100,6 +100,16 @@ def generate_launch_description():
         output='screen',
     )
 
+    auto_switch = Node(
+        package='master_package',
+        executable='main',
+        # parameters=[
+        #     {'input_topic': 'imu/data_raw'},
+        #     {'output_topic': 'imu/data_remapped'},
+        # ]
+        output='screen',
+    )
+
     remapping_cv = Node(
         package='master_package',
         executable='remapping_cv',
@@ -261,6 +271,7 @@ def generate_launch_description():
     # )
 
     return LaunchDescription([
+        auto_switch,
         rviz_launch_arg,
         # gazebo,
         # robot,
