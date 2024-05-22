@@ -243,9 +243,6 @@
 # if __name__ == '__main__':
 #     main()
 
-
-
-
 #DEADMAN REPAIR
 import rclpy
 from rclpy.node import Node
@@ -269,17 +266,17 @@ class ExplorerController(Node):
         self.movement_detected = False
 
     def joy_callback(self, msg):
-        curr_button_x = msg.buttons[2] == 1 # X  
+        curr_button_x = msg.buttons[2] == 1 # square
         curr_button_o = msg.buttons[1] == 1 # O
-        
         #auto mode
         if curr_button_x and not self.prev_x_state:
             self.is_automatic = True #auto mode
             #self.process_cmd_vel = False 
             self.publish_mode(self.is_automatic)
             #self.auto_callback(Bool(data=self.is_automatic))
-            if not self.movement_detected:
+            if not self.movement_detected and not self.e_stop: #wheels start when no movement and no e stop
                 self.wheel_start() #wheels start in auto mode
+                #self.get_logger(),info("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
             self.get_logger().info("IN AUTO MODE")
         #self.pre_button_state = curr_button_state
         
@@ -296,23 +293,48 @@ class ExplorerController(Node):
         self.prev_o_state = curr_button_o
         
         #dead man swtich in auto mode
+        # if self.is_automatic:
+        #     r_2 = msg.axes[5] #rigt
+        #     l_2 = msg.axes[4] #left 
+        #     if (r_2 <  0.5 or l_2 <   0.5) :
+        #         self.get_logger().info("ESTOP INITIATED :O:O:O:O")
+        #         self.e_stop = True
+        #         self.is_automatic = False
+        #         #self.process_cmd_vel = False
+        #         #self.publish_mode(self.is_automatic)
+        #         self.publish_mode(False)
+        #         self.wheel_halt()
+        #     elif (r_2 >=  0.5 or l_2 >=  0.5) and self.e_stop:
+        #         self.get_logger().info("ESTOP DEACTIVATED!!!! ;)")    
+        #         self.e_stop = False
+        #         #self.process_cmd_vel = True
+        #         #self.is_automatic = True
+        #         self.publish_mode(True)
+        #         if not self.movement_detected:
+        #             self.wheel_start()
+        
+        if self.e_stop == True:
+            print("EEEEEEEEEEESTOP ON")
+
         if self.is_automatic:
             r_2 = msg.axes[5] #rigt
-            l_2 = msg.axes[4] #left 
-            if (r_2 < 0.5 or l_2 <  0.5) :
+            #l_2 = msg.axes[4] #left 
+            if r_2 >  0.5: #or l_2 > 0.5) :
                 self.get_logger().info("ESTOP INITIATED :O:O:O:O")
                 self.e_stop = True
-                self.is_automatic = False
-                #self.process_cmd_vel = False
-                self.publish_mode(self.is_automatic)
-                self.wheel_halt()
-            elif (r_2 >=  0.5 or l_2 >= 0.5) and self.e_stop:
+            elif r_2 <= 0.5:
                 self.get_logger().info("ESTOP DEACTIVATED!!!! ;)")    
                 self.e_stop = False
                 #self.process_cmd_vel = True
-                self.is_automatic = True
-                if not self.movement_detected:
-                    self.wheel_start()
+                #self.is_automatic = Trues
+            self.publish_mode(not self.e_stop)   
+            
+            if self.e_stop:
+                self.wheel_halt()
+                
+            elif not self.movement_detected:
+                self.wheel_start()
+                
    
     # def cmd_vel_callback(self, msg):
     #     if self.process_cmd_vel and self.is_automatic:
@@ -323,8 +345,7 @@ class ExplorerController(Node):
     def cmd_vel_callback(self, msg):
         if self.process_cmd_vel and not self.is_automatic and not self.e_stop:
             #self.get_logger().info("MANUAL MODE!!! PROCESSING CMD_VEL")
-            self.publisher_cmd_velo.publish(msg)
-            #pass   
+            self.publisher_cmd_velo.publish(msg) 
         elif self.is_automatic and not self.movement_detected and not self.e_stop:
             self.wheel_start()
         else:
@@ -333,11 +354,11 @@ class ExplorerController(Node):
             
     def movement_callback(self,msg):
         if msg.data and self.is_automatic:
-            self.get_logger().info("MOVEMENT DETECTED WHEELS STOPPING..")
+           # self.get_logger().info("MOVEMENT DETECTED WHEELS STOPPING..")
             self.movement_detected = True
             self.wheel_halt()
         elif not msg.data and self.is_automatic:
-            self.get_logger().info("NO MOVEMENT DETECTED, CARRYING ON......")
+            #self.get_logger().info("NO MOVEMENT DETECTED, CARRYING ON......")
             self.movement_detected = False
             if not self.e_stop:
                 self.wheel_start()
@@ -346,7 +367,7 @@ class ExplorerController(Node):
         msg = Bool()
         msg.data = mode
         self.publisher.publish(msg)
-        #self.auto_callback(msg)
+        self.auto_callback(msg)
         
     def auto_callback(self, msg):
         if msg.data:
@@ -356,14 +377,15 @@ class ExplorerController(Node):
             
     def wheel_start(self):
         #self.get_logger().info("starting wheels........")
-        msg_start = Twist()
-        msg_start.linear.x = 0.5
-        msg_start.linear.y= 0.0
-        msg_start.linear.z = 0.0
-        msg_start.angular.x = 0.0
-        msg_start.angular.y = 0.0
-        msg_start.angular.z = 0.0
-        self.publisher_cmd_velo.publish(msg_start)
+        if not self.movement_detected and not self.e_stop:
+            msg_start = Twist()
+            msg_start.linear.x = 0.5
+            msg_start.linear.y= 0.0
+            msg_start.linear.z = 0.0
+            msg_start.angular.x = 0.0
+            msg_start.angular.y = 0.0
+            msg_start.angular.z = 0.0
+            self.publisher_cmd_velo.publish(msg_start)
         
     def wheel_halt(self):
         #self.get_logger().info("halting wheels........")
