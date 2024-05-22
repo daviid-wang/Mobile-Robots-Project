@@ -130,7 +130,7 @@ class ExplorerController(Node):
         #auto mode
         if curr_button_x and not self.prev_x_state:
             self.is_automatic = True #auto mode
-            #self.process_cmd_vel = False 
+            self.process_cmd_vel = False 
             self.publish_mode(self.is_automatic)
             self.auto_callback(Bool(data=self.is_automatic))
             if not self.movement_detected:
@@ -178,7 +178,7 @@ class ExplorerController(Node):
             #self.get_logger().info("MANUAL MODE!!! PROCESSING CMD_VEL")
             self.publisher_cmd_velo.publish(msg)
             #pass   
-        elif self.is_automatic and not self.movement_detected:
+        elif self.is_automatic and not self.movement_detected and not self.e_stop:
             self.wheel_start()
         else:
             #self.get_logger().info("cmd_callback: wheel_halt() has been called!!")
@@ -192,7 +192,8 @@ class ExplorerController(Node):
         elif not msg.data and self.is_automatic:
             self.get_logger().info("NO MOVEMENT DETECTED, CARRYING ON......")
             self.movement_detected = False
-            self.wheel_start()
+            if not self.e_stop:
+                self.wheel_start()
                 
     def publish_mode(self, mode):
         msg = Bool()
