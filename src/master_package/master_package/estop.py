@@ -178,6 +178,8 @@ class ExplorerController(Node):
             #self.get_logger().info("MANUAL MODE!!! PROCESSING CMD_VEL")
             self.publisher_cmd_velo.publish(msg)
             #pass   
+        elif self.is_automatic and not self.movement_detected:
+            self.wheel_start()
         else:
             #self.get_logger().info("cmd_callback: wheel_halt() has been called!!")
             self.wheel_halt()
