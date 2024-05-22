@@ -12,10 +12,10 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
 
-    #pkg_ros_gz_sim_demos = get_package_share_directory('roslab')
+    # pkg_ros_gz_sim_demos = get_package_share_directory('roslab')
     master_package = get_package_share_directory('master_package')
 
-    sdf_file = os.path.join(master_package, 'worlds', 'basic_urdf.sdf')
+    # sdf_file = os.path.join(pkg_ros_gz_sim_demos, 'worlds', 'basic_urdf.sdf')
     robot_file = os.path.join(master_package, 'robots', 'pioneer2.urdf')
 
     # with open(sdf_file, 'r') as infp:
@@ -29,16 +29,16 @@ def generate_launch_description():
         description='Open RViz.'
     )
 
-    gazebo = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(master_package, 'launch', 'gz_sim.launch.py'),
-        ),
-        launch_arguments={'gz_args': PathJoinSubstitution([
-            pkg_ros_gz_sim_demos,
-            'worlds',
-            'basic_urdf.sdf'
-        ])}.items(),
-    )
+    # gazebo = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(
+    #         os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py'),
+    #     ),
+    #     launch_arguments={'gz_args': PathJoinSubstitution([
+    #         pkg_ros_gz_sim_demos,
+    #         'worlds',
+    #         'basic_urdf.sdf'
+    #     ])}.items(),
+    # )
 
 
     # Get the parser plugin convert sdf to urdf using robot_description topic
@@ -126,22 +126,22 @@ def generate_launch_description():
     #     output="both"
     # )
 
-    bridge = Node(
-        package='ros_gz_bridge',
-        executable='parameter_bridge',
-        arguments=['/lidar@sensor_msgs/msg/LaserScan@ignition.msgs.LaserScan',
-                    '/imu@sensor_msgs/msg/Imu@ignition.msgs.IMU',
-                    '/model/pioneer3at_body/odometry@nav_msgs/msg/Odometry@ignition.msgs.Odometry',
-                    '/cmd_vel@geometry_msgs/msg/Twist@ignition.msgs.Twist',
-                    '/camera@sensor_msgs/msg/Image@ignition.msgs.Image',
-                    '/model/pioneer3at_body/tf@tf2_msgs/msg/TFMessage@ignition.msgs.Pose_V',
-                    '/clock@rosgraph_msgs/msg/Clock@ignition.msgs.Clock',],
-        output='screen',
-        remappings=[('/cmd_vel','/cmd_vel'),
-                    ('/model/pioneer3at_body/odometry','/odom'),
-                    ('/model/pioneer3at_body/tf','/tf')
-        ]
-    )
+    # bridge = Node(
+    #     package='ros_gz_bridge',
+    #     executable='parameter_bridge',
+    #     arguments=['/lidar@sensor_msgs/msg/LaserScan@ignition.msgs.LaserScan',
+    #                 '/imu@sensor_msgs/msg/Imu@ignition.msgs.IMU',
+    #                 '/model/pioneer3at_body/odometry@nav_msgs/msg/Odometry@ignition.msgs.Odometry',
+    #                 '/cmd_vel@geometry_msgs/msg/Twist@ignition.msgs.Twist',
+    #                 '/camera@sensor_msgs/msg/Image@ignition.msgs.Image',
+    #                 '/model/pioneer3at_body/tf@tf2_msgs/msg/TFMessage@ignition.msgs.Pose_V',
+    #                 '/clock@rosgraph_msgs/msg/Clock@ignition.msgs.Clock',],
+    #     output='screen',
+    #     remappings=[('/cmd_vel','/cmd_vel'),
+    #                 ('/model/pioneer3at_body/odometry','/odom'),
+    #                 ('/model/pioneer3at_body/tf','/tf')
+    #     ]
+    # )
 
     slam_toolbox = Node( 
         package='slam_toolbox', 
@@ -287,17 +287,17 @@ def generate_launch_description():
     return LaunchDescription([
         # auto_switch,
         rviz_launch_arg,
+        # gazebo,
         # robot,
-        # robot_state_publisher,
-        # joint_state_pub,
+        robot_state_publisher,
+        joint_state_pub,
         # rvizLaunch,
         rviz,
         # robot_steering,
-        gazebo,
-        bridge,
-        # robot_localization,
-        # imu_remapping,
-        # remapping_cv,
+        # bridge,
+        robot_localization,
+        imu_remapping,
+        remapping_cv,
         #number_recognition,
         #colour_tracking,
         slam_toolbox,
@@ -306,9 +306,9 @@ def generate_launch_description():
         # aria_node,
         # test,
         #lidar,
-        # manual_estop,
+        manual_estop,
         # auto_estop,
-        # joystick,
-        # nav2_launch
+        joystick,
+        nav2_launch
         # robot
     ])

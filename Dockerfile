@@ -15,8 +15,8 @@ WORKDIR /project
 # Install dependencies
 RUN apt-get update -y && \
     apt-get install -y doxygen build-essential 
-    # && \
-    # apt-get clean
+# && \
+# apt-get clean
 
 # Clone and build AriaCoda
 RUN git clone https://github.com/reedhedges/AriaCoda.git
@@ -24,6 +24,10 @@ RUN cd AriaCoda && make && make install
 
 # install wget & pip
 RUN apt install wget && wget https://bootstrap.pypa.io/get-pip.py && python3 ./get-pip.py 
+
+
+RUN apt install ros-humble-gazebo-ros-pkgs -y
+RUN apt install ros-humble-gazebo-ros2-control -y
 #install depthai and opencv
 # RUN pip install numpy
 # RUN pip install easyocr
@@ -38,7 +42,7 @@ RUN apt install ros-humble-joy-linux ros-humble-teleop-twist-joy ros-humble-dept
 #instal apt install ros-humble-std-msgs
 RUN apt install ros-humble-std-msgs
 RUN apt install ros-humble-navigation2 ros-humble-nav2-bringup -y
-RUN apt install python3-rosbag -y
+#RUN apt install python3-rosbag -y
 # RUN git clone https://github.com/gaia-platform/rosbag2_snapshot.gitx
 # RUN cd src/
 # RUN cd joy

@@ -27,7 +27,7 @@ services:
       - DISPLAY=$DISPLAY
       - QT_X11_NO_MITSHM=1
       # - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-    # command: /bin/bash -c "source ./install/setup.bash" && ros2 run ariaPackage ariaPackage -rp /dev/ttyUSB0
+      # command: /bin/bash -c "source ./install/setup.bash" && ros2 run ariaPackage ariaPackage -rp /dev/ttyUSB0
     command: ros2 launch master_package main.launch.py
     # command: /bin/bash -c "source ./install/setup.bash" && ros2 run ariaNode ariaNode -rp /dev/ttyUSB0 && ros2 interface show geometry_msgs/msg/Twist
     # command: ros2 run ariaNode ariaNode && ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.5, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}"
@@ -46,7 +46,7 @@ services:
       - ROS_DOMAIN_ID=87
       - ROS_MASTER_URI=http://localhost:11311
     # command: ros2 run joy joyNode && ros2 launch teleop_twist_joy teleop-launch.py
-    command: ros2 run ariaNode ariaNode -rp /dev/ttyUSB0
+    # command: ros2 run ariaNode ariaNode -rp /dev/ttyUSB0
   camera:
     image: mobile-robots-project:latest
     build: .
@@ -59,20 +59,20 @@ services:
     environment:
       - ROS_DOMAIN_ID=87
       - ROS_MASTER_URI=http://localhost:11311
-    command: ros2 launch depthai_ros_driver camera.launch.py
-  # rviz:
-  #     image: mobile-robots-project:latest
-  #     network_mode: host
-  #     command: ros2 launch master_package rviz.launch.py
-  #     privileged: True
-  #     environment:
-  #       - DISPLAY
-  #     volumes:
-  #       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-  #       - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
-  #       - type: bind
-  #         source: /dev/shm
-  #         target: /dev/shm
+    # command: ros2 launch depthai_ros_driver camera.launch.py
+    # rviz:
+    #     image: mobile-robots-project:latest
+    #     network_mode: host
+    #     command: ros2 launch master_package rviz.launch.py
+    #     privileged: True
+    #     environment:
+    #       - DISPLAY
+    #     volumes:
+    #       - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    #       - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
+    #       - type: bind
+    #         source: /dev/shm
+    #         target: /dev/shm
   lidar:
     image: mobile-robots-project:latest
     build: .
