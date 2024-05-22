@@ -143,6 +143,7 @@ private:
 
   // Automatic control flag
   bool automatic_;
+  bool last_automatic_state_;
   
   // Subscription for automatic control
   rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr automatic_subscription_;

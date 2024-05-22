@@ -41,6 +41,9 @@ RUN apt install ros-humble-joy-linux ros-humble-teleop-twist-joy ros-humble-dept
 #RUN apt-get update && apt-get install -y ros-foxy-visualization-msgs
 
 RUN apt install ros-humble-std-msgs
+
+# Install visualization_msgs package
+RUN apt-get update && apt-get install -y ros-humble-visualization-msgs -y ros-humble-tf2-ros ros-humble-tf2-geometry-msgs
 RUN apt install ros-humble-navigation2 ros-humble-nav2-bringup -y
 RUN apt install python3-rosbag -y
 # RUN git clone https://github.com/gaia-platform/rosbag2_snapshot.gitx

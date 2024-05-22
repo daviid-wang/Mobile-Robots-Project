@@ -50,7 +50,7 @@ class ExplorerController(Node):
         msg = Bool()
         msg.data = mode
         self.publisher.publish(msg)
-        #self.auto_callback(msg) #!Still broken
+        self.auto_callback(msg)
     
     def auto_callback(self, msg):
         if msg.data:

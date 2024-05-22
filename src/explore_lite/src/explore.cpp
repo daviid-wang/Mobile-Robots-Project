@@ -59,6 +59,7 @@ Explore::Explore()
   , prev_distance_(0)
   , last_markers_count_(0)
   , automatic_(false) // Initialize automatic flag
+  , last_automatic_state_(false)
 {
   double timeout;
   double min_frontier_size;
@@ -133,7 +134,7 @@ Explore::Explore()
       std::chrono::milliseconds((uint16_t)(1000.0 / planner_frequency_)),
       [this]() { makePlan(); });
   // Start exploration right away
-  //exploring_timer_->execute_callback();
+  exploring_timer_->execute_callback();
 }
 
 Explore::~Explore()
@@ -144,13 +145,22 @@ Explore::~Explore()
 void Explore::automaticCallback(const std_msgs::msg::Bool::SharedPtr msg)
 {
   automatic_ = msg->data;
-  if (automatic_) {
-    resume();
-  } else {
-    stop();
-  }
+    if (automatic_ != last_automatic_state_)
+    {
+      if (automatic_)
+      {
+        prev_goal_.x = std::numeric_limits<double>::quiet_NaN();
+        prev_goal_.y = std::numeric_limits<double>::quiet_NaN();
+        prev_goal_.z = std::numeric_limits<double>::quiet_NaN();
+        resume();
+      }
+      else
+      {
+        stop();
+      }
+      last_automatic_state_ = automatic_;
+    }
 }
-
 void Explore::resumeCallback(const std_msgs::msg::Bool::SharedPtr msg)
 {
   if (msg->data) {
@@ -254,11 +264,12 @@ void Explore::visualizeFrontiers(
 
 void Explore::makePlan()
 {
-
+    RCLCPP_INFO(logger_, "Starting");
     // Only make a plan if automatic is enabled
     if (!automatic_) {
         return;
     }
+    RCLCPP_INFO(logger_, "Make Plan");
     
     // Get the robot's current pose
     auto pose = costmap_client_.getRobotPose();
@@ -315,6 +326,8 @@ void Explore::makePlan()
         return;
     }
 
+    RCLCPP_INFO(logger_, "Frontier identified");
+
     geometry_msgs::msg::Point target_position = frontier->centroid;
 
     // Time out if we are not making any progress
@@ -323,9 +336,14 @@ void Explore::makePlan()
     prev_goal_ = target_position;
     if (!same_goal || prev_distance_ > frontier->min_distance) {
         // We have a different goal or we made some progress
+        RCLCPP_INFO(logger_, "New progress");
         last_progress_ = this->now();
         prev_distance_ = frontier->min_distance;
     }
+
+    RCLCPP_INFO(logger_, "Target: x: %f, y: %f, z: %f", target_position.x, target_position.y, target_position.z); 
+    RCLCPP_INFO(logger_, "Time since progress: %ld seconds", (this->now() - last_progress_).seconds());
+
 
     // Blacklist if we've made no progress for a long time
     if ((this->now() - last_progress_ > tf2::durationFromSec(progress_timeout_)) && !resuming_) {
@@ -334,16 +352,19 @@ void Explore::makePlan()
         makePlan();
         return;
     }
+    RCLCPP_INFO(logger_, "Not Blacklisted");
 
     // Ensure only the first call of makePlan was set resuming to true
     if (resuming_) {
         resuming_ = false;
     }
+    RCLCPP_INFO(logger_, "Resume Flip");
 
     // We don't need to do anything if we are still pursuing the same goal
     if (same_goal) {
         return;
     }
+
 
     RCLCPP_DEBUG(logger_, "Sending goal to move base nav2");
 
@@ -358,6 +379,9 @@ void Explore::makePlan()
     send_goal_options.result_callback = [this, target_position](const NavigationGoalHandle::WrappedResult& result) {
         reachedGoal(result, target_position);
     };
+
+    RCLCPP_INFO(logger_, "pose target: x: %f, y: %f, z: %f", goal.pose.pose.position.x, goal.pose.pose.position.y, goal.pose.pose.position.z);
+
     move_base_client_->async_send_goal(goal, send_goal_options);
 }
 
