@@ -36,6 +36,10 @@ RUN apt install wget && wget https://bootstrap.pypa.io/get-pip.py && python3 ./g
 #install joy and teleop
 RUN apt install ros-humble-joy-linux ros-humble-teleop-twist-joy ros-humble-depthai-ros ros-humble-phidgets-drivers ros-humble-camera-info-manager ros-humble-sick-scan-xd ros-humble-rviz2 libxcb-xinerama0 ros-humble-slam-toolbox ros-humble-robot-localization ros-humble-joint-state-publisher ros-humble-joint-state-publisher-gui -y
 #instal apt install ros-humble-std-msgs
+
+#install visualization_msgs/Marker Message
+#RUN apt-get update && apt-get install -y ros-foxy-visualization-msgs
+
 RUN apt install ros-humble-std-msgs
 RUN apt install ros-humble-navigation2 ros-humble-nav2-bringup -y
 RUN apt install python3-rosbag -y
