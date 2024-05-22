@@ -172,7 +172,7 @@ local_costmap:
         mark_threshold: 0
         observation_sources: scan
         scan:
-          topic: /lidar
+          topic: /scan
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -204,7 +204,7 @@ global_costmap:
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
-        inflation_radius: 0.55
+        inflation_radius: 0.25 #0.25?
       always_send_full_costmap: True
 map_server:
   ros__parameters:
