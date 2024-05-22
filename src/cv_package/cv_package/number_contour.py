@@ -14,6 +14,7 @@ class OCRNode(Node):
     def __init__(self):
         super().__init__('ocr_node')
         self.publisher = self.create_publisher(Int32, 'recognized_digits', 10)
+        self.marker_publisher = self.create_publisher(Marker, 'identified_markers', 10)
         self.bridge = CvBridge()
         self.reader = easyocr.Reader(['en'], gpu=False)
 
@@ -51,6 +52,27 @@ class OCRNode(Node):
         confidence = count / len(predictions)
         return prediction, confidence
 
+    def maker_publish(self, x,y,w,h, digit):
+        marker = Marker()
+        marker.header.frame_id = "link_cam"
+        marker.header.stamp = self.get_clock().now.to_msg()
+        marker.type = Marker.TEXT_VIEW_FACING 
+        marker.action = Marker.ADD
+        marker.pose.position.x = float(x+w/2)
+        marker.pose.position.y = float(y+h/2)
+        marker.pose.position.z = 0.0
+        marker.pose.orientation.x = 0.0 
+        marker.pose.orientation.y =  0.0                          
+        marker.pose.orientation.z =  0.0      
+        marker.pose.orientation.w =  1.0   #rotation
+        marker.scale.z = 1.0
+        marker.scale.a = 1.0
+        marker.scale.r = 1.0
+        marker.color.b = 1.0  #for full opacity
+        marker.text = str(digit)
+
+        self.marker_publisher.publish(marker)
+
     def listener_callback(self, msg):
         frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
 
@@ -79,7 +101,8 @@ class OCRNode(Node):
                         for digit in recognised_digits:
                             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
                             cv2.putText(frame, f'Digit: {digit}', (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
-
+                            self.maker_publish(x,y,w,h,digit)
+                            
         if recognised_digits:
             for digit in recognised_digits:
                 if not self.all_predictions or digit != self.all_predictions[-1]:
@@ -96,9 +119,6 @@ class OCRNode(Node):
             
         elif not recognised_digits:
             self.get_logger().info("NO DIGITS RECOGNISED")
-            
-            
-
         self.show_frame(frame)
 
     def destroy_node(self):
