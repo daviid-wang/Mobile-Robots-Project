@@ -130,11 +130,12 @@ class ExplorerController(Node):
         #auto mode
         if curr_button_x and not self.prev_x_state:
             self.is_automatic = True #auto mode
-            self.process_cmd_vel = False 
+            #self.process_cmd_vel = False 
             self.publish_mode(self.is_automatic)
-            self.auto_callback(Bool(data=self.is_automatic))
+            #self.auto_callback(Bool(data=self.is_automatic))
             if not self.movement_detected:
                 self.wheel_start() #wheels start in auto mode
+            self.get_logger().info("IN AUTO MODE")
         #self.pre_button_state = curr_button_state
         
         #manual mode
@@ -142,8 +143,9 @@ class ExplorerController(Node):
             self.is_automatic = False 
             self.process_cmd_vel = True 
             self.publish_mode(self.is_automatic)
-            self.auto_callback(Bool(data=self.is_automatic))
+            #self.auto_callback(Bool(data=self.is_automatic))
             self.wheel_halt() 
+            self.get_logger().info("IN MANUAL MODE")
         
         self.prev_x_state = curr_button_x
         self.prev_o_state = curr_button_o
