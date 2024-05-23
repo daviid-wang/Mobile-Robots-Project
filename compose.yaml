@@ -120,11 +120,9 @@ services:
   #     - ROS_DOMAIN_ID=87
   #     - ROS_MASTER_URI=http://localhost:11311
   #   command: ros2 launch nav2_bringup tb3_simulation_launch.py slam:=True
-  # rosbag:
+  # rosbag-snapshot:
   #   image: mobile-robots-project:latest
   #   build: .
-  #   depends_on:
-  #   - base
   #   volumes:
   #     - type: bind
   #       source: /dev
@@ -135,7 +133,9 @@ services:
   #     - ROS_DOMAIN_ID=87
   #     - ROS_MASTER_URI=http://localhost:11311
   #   # command: ros2 bag record -o rosbag_recording2 /cmd_vel /oak/rgb/image_raw /imu/data_raw /map /pose /scan
-  #   command: ros2 run rosbag2_snapshot snapshotter_client --ros-params -p action_type:=trigger_write
+  #   # --ros-args --params-file param/multiple_topics.params.yaml
+  #   command: ros2 run rosbag2_snapshot snapshotter_client --ros-args --params-file /project/install/rosbag2_snapshot/share/rosbag2_snapshot/param/multiple_topics.params.yaml
+  #   # command: ros2 service call /trigger_snapshot rosbag2_snapshot_msgs/srv/TriggerSnapshot "{filename:='', topics:=['/rgb/image_raw'], start_time:={sec:=0, nanosec:=0}, stop_time:={sec:=0, nanosec:=0}}"
   m-explore:
     image: mobile-robots-project:latest
     build: .

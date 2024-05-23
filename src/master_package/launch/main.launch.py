@@ -17,6 +17,12 @@ def generate_launch_description():
 
     # sdf_file = os.path.join(pkg_ros_gz_sim_demos, 'worlds', 'basic_urdf.sdf')
     robot_file = os.path.join(master_package, 'robots', 'pioneer2.urdf')
+    rosbag2_snapshot_config = os.path.join(
+        get_package_share_directory('master_package'),
+        'config',
+        'multiple_topics.params.yaml'
+        )
+
 
     # with open(sdf_file, 'r') as infp:
     #     world_desc = infp.read()
@@ -57,7 +63,7 @@ def generate_launch_description():
     rviz = Node(
         package='rviz2',
         executable='rviz2',
-        # arguments=['-d', os.path.join(pkg_ros_gz_sim_demos, 'rviz', 'vehicle.rviz')],
+        arguments=['-d', os.path.join(master_package, 'rviz', 'rviz2.rviz')],
         condition=IfCondition(LaunchConfiguration('rviz')),
         parameters=[
             {'use_sim_time': False},
@@ -197,7 +203,7 @@ def generate_launch_description():
                 launch_arguments={
                     'map_subscribe_transcient_local': 'true',
                     'use_sim_time': 'false',
-                    'params_file': os.path.join(get_package_share_directory('master_package'), 'config', 'nav2_params2.yaml'),
+                    'params_file': os.path.join(get_package_share_directory('master_package'), 'config', 'nav2_params3.yaml'),
                 }.items(),
     )
 
@@ -225,6 +231,26 @@ def generate_launch_description():
         ]],
         shell=True
     )
+
+    rosbag2_snapshotter = Node(
+                package='rosbag2_snapshot',
+                executable='snapshotter',
+                name='snapshotter',
+                output='screen',
+                parameters=[rosbag2_snapshot_config]
+    )
+    
+    # rosbag2_snapshotter = IncludeLaunchDescription(
+    #             PythonLaunchDescriptionSource([
+    #             PathJoinSubstitution([
+    #                 FindPackageShare('rosbag2_snapshot'),
+    #                 'launch',
+    #                 'snapshotter.launch.py'
+    #             ])]),
+    #             launch_arguments={
+    #                 'params_file': os.path.join(get_package_share_directory('master_package'), 'config', 'multiple_topics.params.yaml'),
+    #             }.items(),
+    # )
     
     # test = ExecuteProcess(
     #     cmd=[[
@@ -299,7 +325,7 @@ def generate_launch_description():
         imu_remapping,
         remapping_cv,
         #number_recognition,
-        #colour_tracking,
+        colour_tracking,
         slam_toolbox,
         # phidgets2,
         # pioneer_base_fp_link_tf,
@@ -309,6 +335,7 @@ def generate_launch_description():
         manual_estop,
         # auto_estop,
         joystick,
-        nav2_launch
-        # robot
+        nav2_launch,
+        # robot,
+        # rosbag2_snapshotter,
     ])

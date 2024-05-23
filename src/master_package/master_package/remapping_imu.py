@@ -8,10 +8,10 @@ class ImuRemapNode(Node):
         super().__init__('imu_remap_node')
         self.subscription = self.create_subscription(
             Imu,
-            'imu/data_raw',
+            '/imu/data_raw',
             self.imu_callback,
             10)
-        self.publisher = self.create_publisher(Imu, 'imu_remapped', 10)
+        self.publisher = self.create_publisher(Imu, '/imu_remapped', 10)
         # self.get_logger().info('IMU Remap Node has been started.')
 
     def imu_callback(self, msg):

@@ -2,7 +2,7 @@
   ros__parameters:
     default_duration_limit: 5.0
     action_type: "trigger_write"
-    filename: "data.bag"
+    filename: "/home/user/Desktop/data.bag"
     prefix: ""
     topics: 
       - "/imu/data_raw"
