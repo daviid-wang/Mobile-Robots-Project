@@ -1,0 +1,20 @@
+/**:
+  ros__parameters:
+    default_duration_limit: 5.0
+    action_type: "trigger_write"
+    filename: "data.bag"
+    prefix: ""
+    topics: 
+      - "/imu/data_raw"
+      - "/oak/rgb/image_raw"
+    topic_details:
+      /imu/data_raw:
+        type: "sensor_msgs/msg/PointCloud2"
+      # /cmd_vel:
+      #   type: "sensor_msgs/msg/PointCloud2"
+        duration: 5.0
+        memory: 1024.0
+      /oak/rgb/image_raw:
+        type: "sensor_msgs/msg/Image"
+        duration: 5.0
+        memory: 1024.0
