@@ -126,6 +126,18 @@ def generate_launch_description():
         output='screen',
     )
 
+    start_stage2 = Node(
+        package='master_package',
+        executable='start_stage2',
+        output='screen',
+    )
+
+    task_bridge = Node(
+        package='master_package',
+        executable='task_bridge2',
+        output='screen',
+    )
+
     # robot = ExecuteProcess(
     #     cmd=["ros2", "run", "ros_gz_sim", "create", "-topic", "robot_description", "-z", "0.2"],
     #     name="spawn robot",
@@ -240,6 +252,12 @@ def generate_launch_description():
                 parameters=[rosbag2_snapshot_config]
     )
     
+    trigger_snapshot = Node(
+                package='master_package',
+                executable='trigger_snapshot',
+    )
+    
+    
     # rosbag2_snapshotter = IncludeLaunchDescription(
     #             PythonLaunchDescriptionSource([
     #             PathJoinSubstitution([
@@ -333,9 +351,12 @@ def generate_launch_description():
         # test,
         #lidar,
         manual_estop,
-        # auto_estop,
+        auto_estop,
         joystick,
         nav2_launch,
-        # robot,
-        # rosbag2_snapshotter,
+        start_stage2,
+        task_bridge,
+        # robot
+        rosbag2_snapshotter,
+        trigger_snapshot,
     ])
